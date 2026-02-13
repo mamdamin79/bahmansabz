@@ -10,9 +10,11 @@ export const encryptSession = async (session: UserSession) => {
     .sign(encodedSecret);
 };
 
+/** Verifies signature; accepts expired tokens (use with refresh flow). */
 export const decryptSession = async (session: string) => {
-  const { payload } = await jwtVerify(session, encodedSecret,{
+  const { payload } = await jwtVerify(session, encodedSecret, {
     algorithms: ["HS256"],
+    clockTolerance: 365 * 24 * 60 * 60, // 1 year in seconds — expired still valid
   });
   return payload;
 };

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Header } from "./_components/header";
 
 export const metadata: Metadata = {
   title: "Bahmansabz",
@@ -12,7 +13,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }
