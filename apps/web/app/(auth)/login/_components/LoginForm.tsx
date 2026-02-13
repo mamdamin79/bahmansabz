@@ -1,17 +1,21 @@
 "use client";
 import { useState, useTransition } from "react";
 import { loginAction } from "@/app/_actions/auth-actions";
+import { useAuthStore } from "@/app/_stores/auth.store";
 
 export const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isPending, startTransition] = useTransition();
+  const { updateSession } = useAuthStore();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(username, password);
     startTransition(async () => {
       const response = await loginAction({ username, password });
-      console.log(response);
+      if (response.isSuccess) {
+        updateSession();
+      }
     });
   };
   return (
