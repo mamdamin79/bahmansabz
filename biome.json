@@ -1,0 +1,123 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.2.6/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": false,
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/.next",
+      "!**/.turbo",
+      "!**/dist",
+      "!**/build",
+      "!**/coverage",
+      "!**/.yarn",
+      "!**/*.min.js",
+      "!**/*.min.css",
+      "!**/public"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 80,
+    "attributePosition": "auto"
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "a11y": {
+        "recommended": true
+      },
+      "complexity": {
+        "recommended": true,
+        "noExcessiveCognitiveComplexity": {
+          "level": "warn",
+          "options": {
+            "maxAllowedComplexity": 25
+          }
+        }
+      },
+      "correctness": {
+        "recommended": true,
+        "noUnusedVariables": "error",
+        "noUnusedImports": "error",
+        "useUniqueElementIds": "off"
+      },
+      "performance": {
+        "recommended": true,
+        "noImgElement": "off"
+      },
+      "security": {
+        "recommended": true
+      },
+      "style": {
+        "recommended": true,
+        "useConst": "error",
+        "useTemplate": "error",
+        "useImportType": "error"
+      },
+      "suspicious": {
+        "recommended": true,
+        "noExplicitAny": "warn",
+        "noArrayIndexKey": "off"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "asNeeded",
+      "trailingCommas": "es5",
+      "semicolons": "always",
+      "arrowParentheses": "always",
+      "bracketSpacing": true,
+      "bracketSameLine": false,
+      "quoteStyle": "double",
+      "attributePosition": "auto"
+    },
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
+    }
+  },
+  "json": {
+    "formatter": {
+      "enabled": true
+    }
+  },
+  "css": {
+    "formatter": {
+      "enabled": true
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["*.config.js", "*.config.ts", "*.config.mjs"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noDefaultExport": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/web/app/**/*.tsx", "apps/web/app/**/*.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noDefaultExport": "off"
+          }
+        }
+      }
+    }
+  ]
+}
