@@ -1,0 +1,24 @@
+"use client";
+import { loginAction } from "@/app/_actions/auth-actions";
+import { useState, useTransition } from "react";
+
+export const LoginForm = () => {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [isPending, startTransition] = useTransition();
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        console.log(username, password);
+        startTransition(async () => {
+            const response = await loginAction({ username, password });
+            console.log(response);
+          });        
+    };
+  return (
+    <form onSubmit={handleSubmit}>
+      <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
+      <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+      <button type="submit" disabled={isPending}>{isPending ? "Logging in..." : "Login"}</button>
+    </form>
+  );
+};
