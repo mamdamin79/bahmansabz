@@ -9,9 +9,14 @@ export const AccountNavigation = () => {
   const router = useRouter();
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
-    clearSession();
-    router.push("/login");
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch (error) {
+      console.error("Error logging out:", error);
+    } finally {
+      clearSession();
+      router.push("/");
+    }
   };
 
   return (

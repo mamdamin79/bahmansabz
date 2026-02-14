@@ -17,7 +17,7 @@ export async function loginAction(model: SignInModel) {
       body: JSON.stringify({
         username: model.username,
         password: model.password,
-        expiresInMins: 10,
+        expiresInMins: 1,
       }),
       headers: { "Content-Type": "application/json" },
     });
