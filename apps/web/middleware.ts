@@ -7,3 +7,9 @@ export function middleware(request: NextRequest) {
     return authMiddleware(request);
 }
  
+export const config = {
+    matcher: [
+        "/profile",
+        "/login",
+    ],
+}

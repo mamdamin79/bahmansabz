@@ -1,8 +1,7 @@
 "use server";
-import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
-import type { JWT, UserResponse, UserSession } from "../_types/auth.types";
-import {  encryptSession } from "../utils/session";
+import type { UserResponse } from "../_types/auth.types";
+import { getEncryptedSessionFromAuthResponse } from "../utils/session";
 
 interface SignInModel {
   username: string;
@@ -46,25 +45,7 @@ export async function loginAction(model: SignInModel) {
 }
 
 export async function SetAuthCookieAction(user: UserResponse) {
-
-    // Decode the access token and refresh token - use claim data in jwt
-  const decodedAccessToken = jwtDecode<JWT>(user.accessToken);
-  const decodedRefreshToken = jwtDecode<JWT>(user.refreshToken);
-
-  const session: UserSession = {
-    username: decodedAccessToken.username,
-    firstName: decodedAccessToken.firstName,
-    image: decodedAccessToken.image,
-    lastName: decodedAccessToken.lastName,
-    email: decodedAccessToken.email,
-    gender: decodedAccessToken.gender,
-    exp: decodedAccessToken.exp,
-    accessToken: user.accessToken,
-    refreshToken: user.refreshToken,
-    refreshTokenExpiry: decodedRefreshToken.exp,
-  };
-  const encryptedSession = await encryptSession(session);
- 
+  const encryptedSession = await getEncryptedSessionFromAuthResponse(user);
   const cookieStore = await cookies();
   cookieStore.set("bahmansabz-session", encryptedSession, {
     httpOnly: true,
