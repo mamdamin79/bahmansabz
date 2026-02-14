@@ -1,8 +1,8 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { loginAction } from "@/app/_actions/auth-actions";
 import { useAuthStore } from "@/app/_stores/auth.store";
-import { useRouter } from "next/navigation";
 export const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

@@ -1,10 +1,8 @@
-import { SetAuthCookieAction } from "@/app/_actions/auth-actions";
-import { UserSession } from "@/app/_types/auth.types";
-import { decryptSession } from "@/app/utils/session";
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
-
-import { NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
+import { SetAuthCookieAction } from "@/app/_actions/auth-actions";
+import type { UserSession } from "@/app/_types/auth.types";
+import { decryptSession } from "@/app/utils/session";
 
 export async function authMiddleware(request: NextRequest) {
   const session = request.cookies.get("bahmansabz-session")?.value;
@@ -12,7 +10,7 @@ export async function authMiddleware(request: NextRequest) {
   const protectedRoutes = ["/profile"];
   const isAuthRoute = authRoutes.includes(request.nextUrl.pathname);
   const isProtectedRoute = protectedRoutes.some((route) =>
-    request.nextUrl.pathname.startsWith(route),
+    request.nextUrl.pathname.startsWith(route)
   );
   const { nextUrl } = request;
   const nextResponse = NextResponse.next();
@@ -22,14 +20,14 @@ export async function authMiddleware(request: NextRequest) {
       const callbackUrl = encodeURIComponent(nextUrl.pathname);
       const loginUrl = request.nextUrl.clone();
       loginUrl.pathname = "/login";
-      return NextResponse.redirect(loginUrl + `?callbackUrl=${callbackUrl}`);
+      return NextResponse.redirect(`${loginUrl}?callbackUrl=${callbackUrl}`);
     }
     // No session and not on protected route (e.g. /login) → allow
     return nextResponse;
   }
   try {
     const decodedSession = (await decryptSession(
-      session,
+      session
     )) as unknown as UserSession;
     const now = Date.now();
     const accessTokenExpired = decodedSession.exp < now;
@@ -51,8 +49,11 @@ export async function authMiddleware(request: NextRequest) {
               "Content-Type": "application/json",
             },
             credentials: "include",
-            body: JSON.stringify({ refreshToken: decodedSession.refreshToken ,expiresInMins: 1}),
-          },
+            body: JSON.stringify({
+              refreshToken: decodedSession.refreshToken,
+              expiresInMins: 1,
+            }),
+          }
         );
         if (response.ok) {
           const data = await response.json();

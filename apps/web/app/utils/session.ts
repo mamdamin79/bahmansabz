@@ -1,5 +1,5 @@
-import { jwtDecode } from "jwt-decode";
 import { type JWTPayload, jwtVerify, SignJWT } from "jose";
+import { jwtDecode } from "jwt-decode";
 import type { JWT, UserSession } from "../_types/auth.types";
 
 const secret = process.env.JWT_SECRET;

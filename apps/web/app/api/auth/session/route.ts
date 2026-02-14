@@ -11,7 +11,7 @@ export async function GET() {
   try {
     const payload = await decryptSession(session);
     return NextResponse.json(payload);
-  } catch (e: unknown) {
+  } catch (_e: unknown) {
     // Invalid or malformed token → 401 so client can refresh or redirect to login
     return NextResponse.json(
       { error: "Invalid or expired session" },
