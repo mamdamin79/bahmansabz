@@ -2,22 +2,9 @@
 
 import { ButtonGroup, IconButton, Pagination } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
+import { buildProductsQuery, productsPath } from "./products-query";
 
 const PAGE_SIZE = 12;
-
-function buildProductsQuery(params: {
-  page: number;
-  sortBy?: string;
-  order?: string;
-  q?: string;
-}): string {
-  const search = new URLSearchParams();
-  search.set("page", String(params.page));
-  if (params.sortBy) search.set("sortBy", params.sortBy);
-  if (params.order) search.set("order", params.order);
-  if (params.q?.trim()) search.set("q", params.q.trim());
-  return search.toString();
-}
 
 export function PaginationComponent({
   page,
@@ -43,7 +30,7 @@ export function PaginationComponent({
       order,
       q,
     });
-    router.push(`/products?${query}`);
+    router.push(productsPath(query));
   };
 
   return (
