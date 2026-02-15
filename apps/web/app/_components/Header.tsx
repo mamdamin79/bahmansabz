@@ -26,6 +26,13 @@ export const Header = () => {
               </Link>
             </li>
             <li>
+              <Link href="/products">
+                <ChakraLink as="span" color="white" _hover={{ textDecoration: "underline" }}>
+                  Products
+                </ChakraLink>
+              </Link>
+            </li>
+            <li>
               <AccountNavigation />
             </li>
           </HStack>
