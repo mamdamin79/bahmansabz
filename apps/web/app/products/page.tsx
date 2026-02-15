@@ -1,4 +1,4 @@
-import { Container, Flex, Heading, SimpleGrid } from "@chakra-ui/react";
+import { Container, Flex, Heading, SimpleGrid, Text, VStack } from "@chakra-ui/react";
 import type { ProductsResponse } from "@/app/_types/products.types";
 import { Pagination } from "./_components/Pagination";
 import { ProductCard } from "./_components/ProductCard";
@@ -80,21 +80,47 @@ export default async function ProductsPage({
             order={order ?? undefined}
             q={q ?? undefined}
           /> */}
-          <SimpleGrid
-            columns={{ base: 1, sm: 2, lg: 3 }}
-            gap={4}
-            flex={1}
-          >
-            {products.map((product) => (
-              <ProductCard
-                key={product.id}
-                title={product.title}
-                price={product.price}
-                imageUrl={product.thumbnail}
-              />
-            ))}
-          </SimpleGrid>
-          <Pagination />
+          {products.length === 0 ? (
+            <VStack
+              py={16}
+              gap={3}
+              align="center"
+              textAlign="center"
+              color="gray.600"
+              _dark={{ color: "gray.400" }}
+            >
+              <Text fontSize="lg" fontWeight="medium">
+                No products found
+              </Text>
+              {q?.trim() ? (
+                <Text fontSize="sm">
+                  Try adjusting your search or filters.
+                </Text>
+              ) : (
+                <Text fontSize="sm">
+                  There are no products to show right now.
+                </Text>
+              )}
+            </VStack>
+          ) : (
+            <>
+              <SimpleGrid
+                columns={{ base: 1, sm: 2, lg: 3 }}
+                gap={4}
+                flex={1}
+              >
+                {products.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    title={product.title}
+                    price={product.price}
+                    imageUrl={product.thumbnail}
+                  />
+                ))}
+              </SimpleGrid>
+              <Pagination />
+            </>
+          )}
         </Flex>
       </Container>
     </main>
