@@ -1,13 +1,26 @@
 import { Suspense } from "react";
+import { Box, Center, Heading, Spinner, VStack } from "@chakra-ui/react";
 import { LoginForm } from "./_components/LoginForm";
 
 export default function LoginPage() {
   return (
-    <div>
-      <h1>Login</h1>
-      <Suspense fallback={<div>Loading...</div>}>
-        <LoginForm />
-      </Suspense>
-    </div>
+    <Box py={10} px={4}>
+      <Center>
+        <VStack gap={8} align="stretch" w="full" maxW="md">
+          <Heading as="h1" size="xl" textAlign="center">
+            Login
+          </Heading>
+          <Suspense
+            fallback={
+              <Center py={10}>
+                <Spinner size="lg" />
+              </Center>
+            }
+          >
+            <LoginForm />
+          </Suspense>
+        </VStack>
+      </Center>
+    </Box>
   );
 }

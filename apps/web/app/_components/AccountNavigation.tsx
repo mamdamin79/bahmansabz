@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Box, Button, HStack, Link as ChakraLink, Spinner, Text } from "@chakra-ui/react";
 import { useAuthStore } from "../_stores/auth.store";
 
 export const AccountNavigation = () => {
@@ -20,20 +21,38 @@ export const AccountNavigation = () => {
   };
 
   return (
-    <div>
+    <Box>
       {status === "authenticated" && session ? (
-        <div>
-          <p>Username: {session.username}</p>
-          <p>Email: {session.email}</p>
-          <button type="button" onClick={handleLogout}>
+        <HStack gap={3} align="center">
+          <Text fontSize="sm" lineClamp={1} maxW="120px">
+            {session.username}
+          </Text>
+          <Link href="/profile">
+            <ChakraLink as="span" color="white" _hover={{ textDecoration: "underline" }}>
+              Profile
+            </ChakraLink>
+          </Link>
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            colorScheme="whiteAlpha"
+            borderColor="whiteAlpha.500"
+            _hover={{ bg: "whiteAlpha.200" }}
+            onClick={handleLogout}
+          >
             Logout
-          </button>
-        </div>
+          </Button>
+        </HStack>
       ) : status === "unauthenticated" ? (
-        <Link href="/login">Login</Link>
+        <Link href="/login">
+          <ChakraLink as="span" color="white" _hover={{ textDecoration: "underline" }}>
+            Login
+          </ChakraLink>
+        </Link>
       ) : (
-        <div>Loading...</div>
+        <Spinner size="sm" />
       )}
-    </div>
+    </Box>
   );
 };

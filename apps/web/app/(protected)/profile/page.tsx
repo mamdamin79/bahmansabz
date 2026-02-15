@@ -1,4 +1,12 @@
 import { cookies } from "next/headers";
+import {
+  Box,
+  Container,
+  Heading,
+  SimpleGrid,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { decryptSession } from "@/app/utils/session";
 
 const getProfileData = async () => {
@@ -9,7 +17,6 @@ const getProfileData = async () => {
     return { error: "No session found" };
   }
   const decodedSession = await decryptSession(session);
-  console.log(decodedSession);
   const response = await fetch(`${apiUrl}/auth/me`, {
     method: "GET",
     headers: {
@@ -17,7 +24,6 @@ const getProfileData = async () => {
       "Content-Type": "application/json",
     },
   });
-  console.log(response);
   if (response.ok) {
     return response.json();
   }
@@ -27,28 +33,62 @@ const getProfileData = async () => {
 export default async function ProfilePage() {
   const profileData = await getProfileData();
   if (profileData.error) {
-    return <div>{profileData.error}</div>;
+    return (
+      <Container maxW="4xl" py={10}>
+        <Text color="red.500">{profileData.error}</Text>
+      </Container>
+    );
   }
 
   return (
-    <div style={{ display: "flex", gap: "10px" }}>
-      <aside
-        style={{ width: "30%", border: "1px solid black", padding: "10px" }}
-      >
-        <h1>Profile</h1>
-        <p>
-          Name: {profileData.firstName} {profileData.lastName}
-        </p>
-        <p>Email: {profileData.email}</p>
-        <p>Username: {profileData.username}</p>
-      </aside>
-      <main
-        style={{ width: "70%", border: "1px solid black", padding: "10px" }}
-      >
-        <p>
-          Name: {profileData.firstName} {profileData.lastName}
-        </p>
-      </main>
-    </div>
+    <Container maxW="4xl" py={10}>
+      <Heading as="h1" size="xl" mb={6}>
+        Profile
+      </Heading>
+      <SimpleGrid columns={{ base: 1, md: 2 }} gap={6}>
+        <Box
+          p={6}
+          borderRadius="lg"
+          borderWidth="1px"
+          borderColor="gray.200"
+          bg="gray.50"
+          _dark={{ bg: "gray.800", borderColor: "gray.700" }}
+        >
+          <VStack align="stretch" gap={3}>
+            <Text fontWeight="semibold" color="gray.600" _dark={{ color: "gray.400" }}>
+              Name
+            </Text>
+            <Text fontSize="lg">
+              {profileData.firstName} {profileData.lastName}
+            </Text>
+            <Text fontWeight="semibold" color="gray.600" _dark={{ color: "gray.400" }}>
+              Email
+            </Text>
+            <Text fontSize="lg">{profileData.email}</Text>
+            <Text fontWeight="semibold" color="gray.600" _dark={{ color: "gray.400" }}>
+              Username
+            </Text>
+            <Text fontSize="lg">{profileData.username}</Text>
+          </VStack>
+        </Box>
+        <Box
+          p={6}
+          borderRadius="lg"
+          borderWidth="1px"
+          borderColor="gray.200"
+          bg="gray.50"
+          _dark={{ bg: "gray.800", borderColor: "gray.700" }}
+        >
+          <VStack align="stretch" gap={3}>
+            <Heading as="h2" size="md">
+              Details
+            </Heading>
+            <Text>
+              Name: {profileData.firstName} {profileData.lastName}
+            </Text>
+          </VStack>
+        </Box>
+      </SimpleGrid>
+    </Container>
   );
 }
