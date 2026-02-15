@@ -2,8 +2,10 @@ import { Container, Flex, Heading, SimpleGrid } from "@chakra-ui/react";
 import type { ProductsResponse } from "@/app/_types/products.types";
 import { Pagination } from "./_components/Pagination";
 import { ProductCard } from "./_components/ProductCard";
-import { ProductsToolbar } from "@/app/products/_components/ProductsToolbar";
+// import { ProductsToolbar } from "@/app/products/_components/ProductsToolbar";
 
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL ?? "https://dummyjson.com";
 
 function buildProductsUrl(
   sortBy: string | null | undefined,
@@ -16,13 +18,13 @@ function buildProductsUrl(
   if (q && q.trim()) params.set("q", q.trim());
 
   if (q && q.trim()) {
-    const base = `${process.env.NEXT_PUBLIC_API_URL}/products/search`;
+    const base = `${API_BASE}/products/search`;
     const query = params.toString();
     return query ? `${base}?${query}` : base;
   }
 
   params.set("limit", "12");
-  return `${process.env.NEXT_PUBLIC_API_URL}/products?${params.toString()}`;
+  return `${API_BASE}/products?${params.toString()}`;
 }
 
 async function getProducts(
@@ -31,9 +33,20 @@ async function getProducts(
   q: string | null | undefined
 ): Promise<ProductsResponse> {
   const url = buildProductsUrl(sortBy, order, q);
-  const res = await fetch(url, { next: { revalidate: 3600 } });
-  if (!res.ok) return { products: [], total: 0, skip: 0, limit: 0 };
-  return res.json();
+  try {
+    const res = await fetch(url, { next: { revalidate: 3600 } });
+    if (!res.ok) {
+      console.error(
+        `[Products] API error ${res.status} ${res.statusText}: ${url}`
+      );
+      return { products: [], total: 0, skip: 0, limit: 0 };
+    }
+    const data = (await res.json()) as ProductsResponse;
+    return data;
+  } catch (err) {
+    console.error("[Products] Failed to fetch products:", err);
+    return { products: [], total: 0, skip: 0, limit: 0 };
+  }
 }
 
 function getStringParam(
@@ -62,11 +75,11 @@ export default async function ProductsPage({
           Products
         </Heading>
         <Flex direction="column" minW={0} w="full">
-          <ProductsToolbar
+          {/* <ProductsToolbar
             sortBy={sortBy ?? undefined}
             order={order ?? undefined}
             q={q ?? undefined}
-          />
+          /> */}
           <SimpleGrid
             columns={{ base: 1, sm: 2, lg: 3 }}
             gap={4}
