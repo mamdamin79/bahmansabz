@@ -1,4 +1,5 @@
 import {
+  Box,
   Container,
   Flex,
   Heading,
@@ -79,7 +80,12 @@ export default async function ProductsPage({
   const q = getStringParam(params.q);
   const pageParam = getStringParam(params.page);
   const pageNum = Math.max(1, Number(pageParam) || 1);
-  const { products, total, skip, limit } = await getProducts(sortBy, order, q, pageNum);
+  const { products, total, limit } = await getProducts(
+    sortBy,
+    order,
+    q,
+    pageNum,
+  );
   return (
     <main>
       <Container maxW="7xl" py={8} px={4}>
@@ -138,14 +144,17 @@ export default async function ProductsPage({
                   />
                 ))}
               </SimpleGrid>
-              <PaginationComponent
-                page={pageNum}
-                total={total}
-                pageSize={limit}
-                sortBy={sortBy ?? undefined}
-                order={order ?? undefined}
-                q={q ?? undefined}
-              />
+
+              <Box mt={4} display="flex" justifyContent="center">
+                <PaginationComponent
+                  page={pageNum}
+                  total={total}
+                  pageSize={PAGE_SIZE}
+                  sortBy={sortBy ?? undefined}
+                  order={order ?? undefined}
+                  q={q ?? undefined}
+                />
+              </Box>
             </>
           )}
         </Flex>
