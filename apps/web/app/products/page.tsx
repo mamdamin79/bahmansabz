@@ -8,7 +8,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { getProducts, PAGE_SIZE } from "@/app/_utils/products";
-import { PaginationComponent } from "./_components/PaginationComponent";
+import { PaginationComponent } from "@/app/_components/PaginationComponent";
 import { ProductCard } from "./_components/ProductCard";
 import { ProductsSearchInput } from "./_components/ProductsSearchInput";
 import { ProductsSortSelect } from "./_components/ProductsSortSelect";
@@ -97,9 +97,12 @@ export default async function ProductsPage({
                   page={pageNum}
                   total={total}
                   pageSize={PAGE_SIZE}
-                  sortBy={sortBy ?? undefined}
-                  order={order ?? undefined}
-                  q={q ?? undefined}
+                  basePath="/products"
+                  params={{
+                    ...(sortBy ? { sortBy } : {}),
+                    ...(order ? { order } : {}),
+                    ...(q ? { q } : {}),
+                  }}
                 />
               </Box>
             </>

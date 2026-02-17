@@ -1,5 +1,6 @@
 import { Badge, Box, Container, Heading, Table, Text } from "@chakra-ui/react";
-import { getUsers } from "@/app/_utils/users";
+import { PaginationComponent } from "@/app/_components/PaginationComponent";
+import { getUsers, USERS_PAGE_SIZE } from "@/app/_utils/users";
 
 function getStringParam(
   value: string | string[] | undefined
@@ -36,6 +37,7 @@ export default async function UsersPage({
         {users.length === 0 ? (
           <Text color="gray.500">No users found.</Text>
         ) : (
+          <>
           <Box overflowX="auto">
             <Table.Root size="sm" variant="outline">
               <Table.Header>
@@ -102,6 +104,15 @@ export default async function UsersPage({
               </Table.Body>
             </Table.Root>
           </Box>
+          <Box mt={4} display="flex" justifyContent="center">
+            <PaginationComponent
+              page={pageNum}
+              total={total}
+              pageSize={USERS_PAGE_SIZE}
+              basePath="/users"
+            />
+          </Box>
+          </>
         )}
       </Container>
     </main>

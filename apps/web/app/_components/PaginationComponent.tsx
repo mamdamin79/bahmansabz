@@ -2,43 +2,46 @@
 
 import { ButtonGroup, IconButton, Pagination } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { buildProductsQuery, productsPath } from "./products-query";
 
-const PAGE_SIZE = 12;
+interface PaginationComponentProps {
+  page: number;
+  total: number;
+  pageSize: number;
+  basePath: string;
+  params?: Record<string, string>;
+}
+
+function buildHref(
+  basePath: string,
+  page: number,
+  params?: Record<string, string>,
+): string {
+  const search = new URLSearchParams();
+  if (params) {
+    for (const [key, value] of Object.entries(params)) {
+      if (value) search.set(key, value);
+    }
+  }
+  if (page > 1) search.set("page", String(page));
+  const query = search.toString();
+  return query ? `${basePath}?${query}` : basePath;
+}
 
 export function PaginationComponent({
   page,
   total,
-  pageSize = PAGE_SIZE,
-  sortBy,
-  order,
-  q,
-}: {
-  page: number;
-  total: number;
-  pageSize?: number;
-  sortBy?: string;
-  order?: string;
-  q?: string;
-}) {
+  pageSize,
+  basePath,
+  params,
+}: PaginationComponentProps) {
   const router = useRouter();
-
-  const handlePageChange = (e: { page: number }) => {
-    const query = buildProductsQuery({
-      page: e.page,
-      sortBy,
-      order,
-      q,
-    });
-    router.push(productsPath(query));
-  };
 
   return (
     <Pagination.Root
       count={total}
       pageSize={pageSize}
       page={page}
-      onPageChange={(e) => handlePageChange(e)}
+      onPageChange={(e) => router.push(buildHref(basePath, e.page, params))}
     >
       <ButtonGroup variant="ghost" size="sm">
         <Pagination.PrevTrigger asChild>
