@@ -1,4 +1,7 @@
+"use client";
+
 import { Box, SimpleGrid, VStack } from "@chakra-ui/react";
+import { useState } from "react";
 
 interface ProductImageGalleryProps {
   title: string;
@@ -11,6 +14,8 @@ export function ProductImageGallery({
   images,
   thumbnail,
 }: ProductImageGalleryProps) {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
   if (images && images.length > 0) {
     return (
       <VStack gap={3}>
@@ -22,7 +27,7 @@ export function ProductImageGallery({
           w="full"
         >
           <img
-            src={images[0]}
+            src={images[selectedIndex]}
             alt={title}
             style={{
               width: "100%",
@@ -34,19 +39,27 @@ export function ProductImageGallery({
         </Box>
         {images.length > 1 && (
           <SimpleGrid columns={{ base: 3, sm: 4 }} gap={2} w="full">
-            {images.slice(1).map((img, i) => (
+            {images.map((img, i) => (
               <Box
                 key={img}
                 borderRadius="md"
                 overflow="hidden"
                 bg="gray.100"
-                borderWidth="1px"
-                borderColor="gray.200"
-                _dark={{ bg: "gray.800", borderColor: "gray.700" }}
+                borderWidth="2px"
+                borderColor={i === selectedIndex ? "blue.500" : "gray.200"}
+                _dark={{
+                  bg: "gray.800",
+                  borderColor: i === selectedIndex ? "blue.400" : "gray.700",
+                }}
+                cursor="pointer"
+                opacity={i === selectedIndex ? 1 : 0.7}
+                _hover={{ opacity: 1 }}
+                transition="opacity 0.2s, border-color 0.2s"
+                onClick={() => setSelectedIndex(i)}
               >
                 <img
                   src={img}
-                  alt={`${title} - ${i + 2}`}
+                  alt={`${title} - ${i + 1}`}
                   style={{
                     width: "100%",
                     aspectRatio: "1",
