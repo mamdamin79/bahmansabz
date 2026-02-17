@@ -3,27 +3,35 @@
 import { Input } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
-import { buildProductsQuery, productsPath } from "./products-query";
 
-interface ProductsSearchInputProps {
+interface SearchInputProps {
+  basePath: string;
   defaultValue?: string;
-  sortBy?: string;
-  order?: string;
+  placeholder?: string;
+  params?: Record<string, string>;
 }
 
-export function ProductsSearchInput({
+export function SearchInput({
+  basePath,
   defaultValue = "",
-  sortBy,
-  order,
-}: ProductsSearchInputProps) {
+  placeholder = "Search…",
+  params,
+}: SearchInputProps) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const q = inputRef.current?.value?.trim() ?? "";
-    const query = buildProductsQuery({ sortBy, order, q: q || undefined });
-    router.push(productsPath(query));
+    const search = new URLSearchParams();
+    if (params) {
+      for (const [key, value] of Object.entries(params)) {
+        if (value) search.set(key, value);
+      }
+    }
+    if (q) search.set("q", q);
+    const query = search.toString();
+    router.push(query ? `${basePath}?${query}` : basePath);
   };
 
   return (
@@ -31,11 +39,11 @@ export function ProductsSearchInput({
       <Input
         ref={inputRef}
         name="q"
-        placeholder="Search products…"
+        placeholder={placeholder}
         defaultValue={defaultValue}
         maxW={{ sm: "xs" }}
         w="full"
-        aria-label="Search products"
+        aria-label={placeholder}
       />
     </form>
   );

@@ -8,9 +8,9 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { PaginationComponent } from "@/app/_components/PaginationComponent";
+import { SearchInput } from "@/app/_components/SearchInput";
 import { getProducts, PAGE_SIZE } from "@/app/_utils/products";
 import { ProductCard } from "./_components/ProductCard";
-import { ProductsSearchInput } from "./_components/ProductsSearchInput";
 import { ProductsSortSelect } from "./_components/ProductsSortSelect";
 
 function getStringParam(
@@ -47,10 +47,14 @@ export default async function ProductsPage({
             direction={{ base: "column", sm: "row" }}
             align={{ base: "stretch", sm: "center" }}
           >
-            <ProductsSearchInput
+            <SearchInput
+              basePath="/products"
               defaultValue={q ?? ""}
-              sortBy={sortBy ?? undefined}
-              order={order ?? undefined}
+              placeholder="Search products…"
+              params={{
+                ...(sortBy ? { sortBy } : {}),
+                ...(order ? { order } : {}),
+              }}
             />
             <ProductsSortSelect
               sortBy={sortBy ?? undefined}

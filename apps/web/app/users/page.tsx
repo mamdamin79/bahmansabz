@@ -1,5 +1,6 @@
-import { Badge, Box, Container, Heading, Table, Text } from "@chakra-ui/react";
+import { Badge, Box, Container, Flex, Heading, Table, Text } from "@chakra-ui/react";
 import { PaginationComponent } from "@/app/_components/PaginationComponent";
+import { SearchInput } from "@/app/_components/SearchInput";
 import { getUsers, USERS_PAGE_SIZE } from "@/app/_utils/users";
 
 function getStringParam(
@@ -15,9 +16,10 @@ export default async function UsersPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const params = await searchParams;
+  const q = getStringParam(params.q);
   const pageParam = getStringParam(params.page);
   const pageNum = Math.max(1, Number(pageParam) || 1);
-  const { users, total } = await getUsers(pageNum);
+  const { users, total } = await getUsers(pageNum, q);
 
   return (
     <main>
@@ -25,17 +27,26 @@ export default async function UsersPage({
         <Heading as="h1" size="xl" mb={2}>
           Users
         </Heading>
-        <Text
-          fontSize="sm"
-          color="gray.500"
-          _dark={{ color: "gray.400" }}
-          mb={6}
-        >
-          {total} users total
-        </Text>
+        <Flex mb={6} gap={4} align="center">
+          <SearchInput
+            basePath="/users"
+            defaultValue={q ?? ""}
+            placeholder="Search users…"
+          />
+          <Text
+            fontSize="sm"
+            color="gray.500"
+            _dark={{ color: "gray.400" }}
+            flexShrink={0}
+          >
+            {total} users
+          </Text>
+        </Flex>
 
         {users.length === 0 ? (
-          <Text color="gray.500">No users found.</Text>
+          <Text color="gray.500">
+            {q?.trim() ? "No users match your search." : "No users found."}
+          </Text>
         ) : (
           <>
             <Box overflowX="auto">
@@ -110,6 +121,9 @@ export default async function UsersPage({
                 total={total}
                 pageSize={USERS_PAGE_SIZE}
                 basePath="/users"
+                params={{
+                  ...(q ? { q } : {}),
+                }}
               />
             </Box>
           </>
