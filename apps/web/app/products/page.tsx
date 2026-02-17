@@ -7,8 +7,8 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { getProducts, PAGE_SIZE } from "@/app/_utils/products";
 import { PaginationComponent } from "@/app/_components/PaginationComponent";
+import { getProducts, PAGE_SIZE } from "@/app/_utils/products";
 import { ProductCard } from "./_components/ProductCard";
 import { ProductsSearchInput } from "./_components/ProductsSearchInput";
 import { ProductsSortSelect } from "./_components/ProductsSortSelect";
