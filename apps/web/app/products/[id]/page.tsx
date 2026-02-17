@@ -10,16 +10,39 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { formatPrice } from "@/app/_utils/format";
 import { getProduct } from "@/app/_utils/products";
 
+type PageProps = { params: Promise<{ id: string }> };
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const product = await getProduct(id);
+
+  if (!product) {
+    return { title: "Product not found" };
+  }
+
+  return {
+    title: product.title,
+    description:
+      product.description ?? `Buy ${product.title} at the best price.`,
+    openGraph: {
+      title: product.title,
+      description: product.description,
+      images: product.thumbnail ? [{ url: product.thumbnail }] : undefined,
+    },
+  };
+}
+
 export default async function ProductPage({
   params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+}: PageProps) {
   const { id } = await params;
   const product = await getProduct(id);
 
