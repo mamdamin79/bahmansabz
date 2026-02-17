@@ -1,15 +1,8 @@
-import {
-  Badge,
-  Box,
-  Container,
-  Heading,
-  Table,
-  Text,
-} from "@chakra-ui/react";
-import { getUsers, USERS_PAGE_SIZE } from "@/app/_utils/users";
+import { Badge, Box, Container, Heading, Table, Text } from "@chakra-ui/react";
+import { getUsers } from "@/app/_utils/users";
 
 function getStringParam(
-  value: string | string[] | undefined,
+  value: string | string[] | undefined
 ): string | undefined {
   if (value == null) return undefined;
   return Array.isArray(value) ? value[0] : value;
@@ -31,7 +24,12 @@ export default async function UsersPage({
         <Heading as="h1" size="xl" mb={2}>
           Users
         </Heading>
-        <Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }} mb={6}>
+        <Text
+          fontSize="sm"
+          color="gray.500"
+          _dark={{ color: "gray.400" }}
+          mb={6}
+        >
           {total} users total
         </Text>
 
@@ -91,7 +89,11 @@ export default async function UsersPage({
                     </Table.Cell>
                     <Table.Cell>
                       <Text fontSize="sm">{user.company.name}</Text>
-                      <Text fontSize="xs" color="gray.500" _dark={{ color: "gray.400" }}>
+                      <Text
+                        fontSize="xs"
+                        color="gray.500"
+                        _dark={{ color: "gray.400" }}
+                      >
                         {user.company.title}
                       </Text>
                     </Table.Cell>

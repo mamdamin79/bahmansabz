@@ -31,12 +31,7 @@ export default async function ProductsPage({
   const q = getStringParam(params.q);
   const pageParam = getStringParam(params.page);
   const pageNum = Math.max(1, Number(pageParam) || 1);
-  const { products, total } = await getProducts(
-    sortBy,
-    order,
-    q,
-    pageNum
-  );
+  const { products, total } = await getProducts(sortBy, order, q, pageNum);
   return (
     <main>
       <Container maxW="7xl" py={8} px={4}>

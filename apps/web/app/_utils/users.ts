@@ -9,7 +9,9 @@ export async function getUsers(page = 1): Promise<UsersResponse> {
   try {
     const res = await fetch(url, { next: { revalidate: 3600 } });
     if (!res.ok) {
-      console.error(`[Users] API error ${res.status} ${res.statusText}: ${url}`);
+      console.error(
+        `[Users] API error ${res.status} ${res.statusText}: ${url}`
+      );
       return { users: [], total: 0, skip: 0, limit: 0 };
     }
     return (await res.json()) as UsersResponse;
