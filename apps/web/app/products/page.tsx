@@ -7,60 +7,11 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import type { ProductsResponse } from "@/app/_types/products.types";
+import { getProducts, PAGE_SIZE } from "@/app/_utils/products";
 import { PaginationComponent } from "./_components/PaginationComponent";
 import { ProductCard } from "./_components/ProductCard";
 import { ProductsSearchInput } from "./_components/ProductsSearchInput";
 import { ProductsSortSelect } from "./_components/ProductsSortSelect";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "https://dummyjson.com";
-
-const PAGE_SIZE = 12;
-
-const skip = (page: number) => (page - 1) * PAGE_SIZE;
-const limit = PAGE_SIZE;
-function buildProductsUrl(
-  sortBy: string | null | undefined,
-  order: string | null | undefined,
-  q: string | null | undefined,
-  page: number | null | undefined,
-): string {
-  const pageNum = page && page >= 1 ? page : 1;
-  const skipValue = skip(pageNum);
-  const params = new URLSearchParams();
-  if (sortBy) params.set("sortBy", sortBy);
-  if (order) params.set("order", order);
-  if (q && q.trim()) params.set("q", q.trim());
-  params.set("limit", limit.toString());
-  params.set("skip", String(skipValue));
-  if (q && q.trim()) {
-    return `${API_BASE}/products/search?${params.toString()}`;
-  }
-  return `${API_BASE}/products?${params.toString()}`;
-}
-
-async function getProducts(
-  sortBy: string | null | undefined,
-  order: string | null | undefined,
-  q: string | null | undefined,
-  page: number | null | undefined,
-): Promise<ProductsResponse> {
-  const url = buildProductsUrl(sortBy, order, q, page);
-  try {
-    const res = await fetch(url, { next: { revalidate: 3600 } });
-    if (!res.ok) {
-      console.error(
-        `[Products] API error ${res.status} ${res.statusText}: ${url}`,
-      );
-      return { products: [], total: 0, skip: 0, limit: 0 };
-    }
-    const data = (await res.json()) as ProductsResponse;
-    return data;
-  } catch (err) {
-    console.error("[Products] Failed to fetch products:", err);
-    return { products: [], total: 0, skip: 0, limit: 0 };
-  }
-}
 
 function getStringParam(
   value: string | string[] | undefined,
@@ -138,6 +89,7 @@ export default async function ProductsPage({
                 {products.map((product) => (
                   <ProductCard
                     key={product.id}
+                    id={product.id}
                     title={product.title}
                     price={product.price}
                     imageUrl={product.thumbnail}
