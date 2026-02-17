@@ -51,7 +51,11 @@ export function ProductCard({ id, title, price, imageUrl }: ProductCardProps) {
           <Heading as="h2" size="sm" mb={2} lineClamp={2}>
             {title}
           </Heading>
-          <Text fontWeight="semibold" color="gray.700" _dark={{ color: "gray.200" }}>
+          <Text
+            fontWeight="semibold"
+            color="gray.700"
+            _dark={{ color: "gray.200" }}
+          >
             {displayPrice}
           </Text>
         </Box>

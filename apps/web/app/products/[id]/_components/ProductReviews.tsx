@@ -34,11 +34,7 @@ export function ProductReviews({ reviews }: ProductReviewsProps) {
                 </Text>
               </HStack>
             </HStack>
-            <Text
-              fontSize="sm"
-              color="gray.600"
-              _dark={{ color: "gray.400" }}
-            >
+            <Text fontSize="sm" color="gray.600" _dark={{ color: "gray.400" }}>
               {review.comment}
             </Text>
             <Text

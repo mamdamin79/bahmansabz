@@ -1,5 +1,5 @@
-import { Suspense } from "react";
 import { Box, Center, Heading, Spinner, VStack } from "@chakra-ui/react";
+import { Suspense } from "react";
 import { LoginForm } from "./_components/LoginForm";
 
 export default function LoginPage() {

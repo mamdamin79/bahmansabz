@@ -30,11 +30,7 @@ export function ProductPrice({
         </Text>
         {discountedPrice != null && (
           <>
-            <Text
-              fontSize="lg"
-              textDecoration="line-through"
-              color="gray.400"
-            >
+            <Text fontSize="lg" textDecoration="line-through" color="gray.400">
               {formatPrice(price)}
             </Text>
             <Badge colorPalette="green" size="sm">
@@ -68,11 +64,7 @@ export function ProductPrice({
           </Badge>
         )}
         {stock != null && (
-          <Text
-            fontSize="sm"
-            color="gray.500"
-            _dark={{ color: "gray.400" }}
-          >
+          <Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
             {stock} in stock
           </Text>
         )}

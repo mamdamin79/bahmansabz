@@ -21,8 +21,10 @@ export function ProductInfo({
   warrantyInformation,
   returnPolicy,
 }: ProductInfoProps) {
-  const hasSpecs = sku || weight != null || dimensions || minimumOrderQuantity != null;
-  const hasPolicies = shippingInformation || warrantyInformation || returnPolicy;
+  const hasSpecs =
+    sku || weight != null || dimensions || minimumOrderQuantity != null;
+  const hasPolicies =
+    shippingInformation || warrantyInformation || returnPolicy;
 
   if (!hasSpecs && !hasPolicies) return null;
 
@@ -41,7 +43,11 @@ export function ProductInfo({
         >
           {sku && (
             <>
-              <Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+              <Text
+                fontSize="sm"
+                color="gray.500"
+                _dark={{ color: "gray.400" }}
+              >
                 SKU
               </Text>
               <Text fontSize="sm">{sku}</Text>
@@ -49,7 +55,11 @@ export function ProductInfo({
           )}
           {weight != null && (
             <>
-              <Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+              <Text
+                fontSize="sm"
+                color="gray.500"
+                _dark={{ color: "gray.400" }}
+              >
                 Weight
               </Text>
               <Text fontSize="sm">{weight} kg</Text>
@@ -57,7 +67,11 @@ export function ProductInfo({
           )}
           {dimensions && (
             <>
-              <Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+              <Text
+                fontSize="sm"
+                color="gray.500"
+                _dark={{ color: "gray.400" }}
+              >
                 Dimensions
               </Text>
               <Text fontSize="sm">
@@ -67,7 +81,11 @@ export function ProductInfo({
           )}
           {minimumOrderQuantity != null && (
             <>
-              <Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+              <Text
+                fontSize="sm"
+                color="gray.500"
+                _dark={{ color: "gray.400" }}
+              >
                 Min. order
               </Text>
               <Text fontSize="sm">{minimumOrderQuantity} pcs</Text>
@@ -81,7 +99,11 @@ export function ProductInfo({
         <VStack align="stretch" gap={2}>
           {shippingInformation && (
             <HStack gap={2}>
-              <Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+              <Text
+                fontSize="sm"
+                color="gray.500"
+                _dark={{ color: "gray.400" }}
+              >
                 Shipping:
               </Text>
               <Text fontSize="sm">{shippingInformation}</Text>
@@ -89,7 +111,11 @@ export function ProductInfo({
           )}
           {warrantyInformation && (
             <HStack gap={2}>
-              <Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+              <Text
+                fontSize="sm"
+                color="gray.500"
+                _dark={{ color: "gray.400" }}
+              >
                 Warranty:
               </Text>
               <Text fontSize="sm">{warrantyInformation}</Text>
@@ -97,7 +123,11 @@ export function ProductInfo({
           )}
           {returnPolicy && (
             <HStack gap={2}>
-              <Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
+              <Text
+                fontSize="sm"
+                color="gray.500"
+                _dark={{ color: "gray.400" }}
+              >
                 Returns:
               </Text>
               <Text fontSize="sm">{returnPolicy}</Text>

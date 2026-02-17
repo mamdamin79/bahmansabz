@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import {
   Box,
   Container,
@@ -7,6 +6,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { cookies } from "next/headers";
 import { decryptSession } from "@/app/utils/session";
 
 const getProfileData = async () => {
@@ -55,17 +55,29 @@ export default async function ProfilePage() {
           _dark={{ bg: "gray.800", borderColor: "gray.700" }}
         >
           <VStack align="stretch" gap={3}>
-            <Text fontWeight="semibold" color="gray.600" _dark={{ color: "gray.400" }}>
+            <Text
+              fontWeight="semibold"
+              color="gray.600"
+              _dark={{ color: "gray.400" }}
+            >
               Name
             </Text>
             <Text fontSize="lg">
               {profileData.firstName} {profileData.lastName}
             </Text>
-            <Text fontWeight="semibold" color="gray.600" _dark={{ color: "gray.400" }}>
+            <Text
+              fontWeight="semibold"
+              color="gray.600"
+              _dark={{ color: "gray.400" }}
+            >
               Email
             </Text>
             <Text fontSize="lg">{profileData.email}</Text>
-            <Text fontWeight="semibold" color="gray.600" _dark={{ color: "gray.400" }}>
+            <Text
+              fontWeight="semibold"
+              color="gray.600"
+              _dark={{ color: "gray.400" }}
+            >
               Username
             </Text>
             <Text fontSize="lg">{profileData.username}</Text>

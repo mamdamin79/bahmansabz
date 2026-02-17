@@ -34,7 +34,9 @@ export function ProductsSortSelect({
     }
     const [nextSortBy, nextOrder] = value.split("-") as [string, string];
     router.push(
-      productsPath(buildProductsQuery({ sortBy: nextSortBy, order: nextOrder, q }))
+      productsPath(
+        buildProductsQuery({ sortBy: nextSortBy, order: nextOrder, q })
+      )
     );
   };
 

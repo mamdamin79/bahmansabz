@@ -1,15 +1,8 @@
 "use client";
 
+import { Box, Button, Field, Input, Stack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import {
-  Box,
-  Button,
-  Field,
-  Input,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
 import { loginAction } from "@/app/_actions/auth-actions";
 import { useAuthStore } from "@/app/_stores/auth.store";
 

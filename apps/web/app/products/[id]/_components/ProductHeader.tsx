@@ -6,11 +6,7 @@ interface ProductHeaderProps {
   brand?: string;
 }
 
-export function ProductHeader({
-  title,
-  category,
-  brand,
-}: ProductHeaderProps) {
+export function ProductHeader({ title, category, brand }: ProductHeaderProps) {
   return (
     <Box>
       <Text

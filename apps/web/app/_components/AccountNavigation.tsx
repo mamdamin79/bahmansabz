@@ -1,8 +1,15 @@
 "use client";
 
+import {
+  Box,
+  Button,
+  Link as ChakraLink,
+  HStack,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Box, Button, HStack, Link as ChakraLink, Spinner, Text } from "@chakra-ui/react";
 import { useAuthStore } from "../_stores/auth.store";
 
 export const AccountNavigation = () => {
@@ -28,7 +35,11 @@ export const AccountNavigation = () => {
             {session.username}
           </Text>
           <Link href="/profile">
-            <ChakraLink as="span" color="white" _hover={{ textDecoration: "underline" }}>
+            <ChakraLink
+              as="span"
+              color="white"
+              _hover={{ textDecoration: "underline" }}
+            >
               Profile
             </ChakraLink>
           </Link>
@@ -46,7 +57,11 @@ export const AccountNavigation = () => {
         </HStack>
       ) : status === "unauthenticated" ? (
         <Link href="/login">
-          <ChakraLink as="span" color="white" _hover={{ textDecoration: "underline" }}>
+          <ChakraLink
+            as="span"
+            color="white"
+            _hover={{ textDecoration: "underline" }}
+          >
             Login
           </ChakraLink>
         </Link>

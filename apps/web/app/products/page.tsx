@@ -14,7 +14,7 @@ import { ProductsSearchInput } from "./_components/ProductsSearchInput";
 import { ProductsSortSelect } from "./_components/ProductsSortSelect";
 
 function getStringParam(
-  value: string | string[] | undefined,
+  value: string | string[] | undefined
 ): string | undefined {
   if (value == null) return undefined;
   return Array.isArray(value) ? value[0] : value;
@@ -31,11 +31,11 @@ export default async function ProductsPage({
   const q = getStringParam(params.q);
   const pageParam = getStringParam(params.page);
   const pageNum = Math.max(1, Number(pageParam) || 1);
-  const { products, total, limit } = await getProducts(
+  const { products, total } = await getProducts(
     sortBy,
     order,
     q,
-    pageNum,
+    pageNum
   );
   return (
     <main>

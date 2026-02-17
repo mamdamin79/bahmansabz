@@ -7,17 +7,17 @@ function buildProductsUrl(
   sortBy: string | null | undefined,
   order: string | null | undefined,
   q: string | null | undefined,
-  page: number | null | undefined,
+  page: number | null | undefined
 ): string {
   const pageNum = page && page >= 1 ? page : 1;
   const skipValue = (pageNum - 1) * PAGE_SIZE;
   const params = new URLSearchParams();
   if (sortBy) params.set("sortBy", sortBy);
   if (order) params.set("order", order);
-  if (q && q.trim()) params.set("q", q.trim());
+  if (q?.trim()) params.set("q", q.trim());
   params.set("limit", PAGE_SIZE.toString());
   params.set("skip", String(skipValue));
-  if (q && q.trim()) {
+  if (q?.trim()) {
     return `${API_BASE}/products/search?${params.toString()}`;
   }
   return `${API_BASE}/products?${params.toString()}`;
@@ -27,14 +27,14 @@ export async function getProducts(
   sortBy: string | null | undefined,
   order: string | null | undefined,
   q: string | null | undefined,
-  page: number | null | undefined,
+  page: number | null | undefined
 ): Promise<ProductsResponse> {
   const url = buildProductsUrl(sortBy, order, q, page);
   try {
     const res = await fetch(url, { next: { revalidate: 3600 } });
     if (!res.ok) {
       console.error(
-        `[Products] API error ${res.status} ${res.statusText}: ${url}`,
+        `[Products] API error ${res.status} ${res.statusText}: ${url}`
       );
       return { products: [], total: 0, skip: 0, limit: 0 };
     }
