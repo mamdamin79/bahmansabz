@@ -1,8 +1,16 @@
 import { Badge, Box, Table, Text } from "@chakra-ui/react";
 import type { User } from "@/app/_types/users.types";
+import { FilterableTableHeader } from "@/app/_components/FilterableTableHeader";
 import { TableSortHeader } from "@/app/_components/TableSortHeader";
 import type { UsersSortBy, UsersSortOrder } from "@/app/_utils/users";
 import { UserTableRow } from "./UserTableRow";
+
+const ROLE_FILTER_OPTIONS = [
+  { value: "", label: "All" },
+  { value: "admin", label: "Admin" },
+  { value: "moderator", label: "Moderator" },
+  { value: "user", label: "User" },
+];
 
 interface UsersTableProps {
   users: User[];
@@ -44,7 +52,14 @@ export function UsersTable({
               basePath={basePath}
               params={params}
             />
-            <Table.ColumnHeader>Role</Table.ColumnHeader>
+            <FilterableTableHeader
+              label="Role"
+              filterKey="role"
+              options={ROLE_FILTER_OPTIONS}
+              currentValue={params?.role}
+              basePath={basePath}
+              params={params}
+            />
             <Table.ColumnHeader>Company</Table.ColumnHeader>
           </Table.Row>
         </Table.Header>

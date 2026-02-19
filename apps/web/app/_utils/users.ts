@@ -6,23 +6,33 @@ const PAGE_SIZE = 20;
 export type UsersSortBy = "firstName" | "age";
 export type UsersSortOrder = "asc" | "desc";
 
+export type UsersFilter = { key: string; value: string };
+
 export async function getUsers(
   page = 1,
   q?: string | null,
   sortBy?: UsersSortBy | null,
-  order?: UsersSortOrder | null
+  order?: UsersSortOrder | null,
+  filter?: UsersFilter | null
 ): Promise<UsersResponse> {
   const skip = (page - 1) * PAGE_SIZE;
   const params = new URLSearchParams();
   params.set("limit", String(PAGE_SIZE));
   params.set("skip", String(skip));
-  if (q?.trim()) params.set("q", q.trim());
   if (sortBy) params.set("sortBy", sortBy);
   if (order) params.set("order", order);
 
-  const endpoint = q?.trim()
-    ? `${API_BASE}/users/search`
-    : `${API_BASE}/users`;
+  let endpoint: string;
+  if (filter?.key && filter?.value) {
+    endpoint = `${API_BASE}/users/filter`;
+    params.set("key", filter.key);
+    params.set("value", filter.value);
+  } else if (q?.trim()) {
+    endpoint = `${API_BASE}/users/search`;
+    params.set("q", q.trim());
+  } else {
+    endpoint = `${API_BASE}/users`;
+  }
 
   const url = `${endpoint}?${params.toString()}`;
   try {

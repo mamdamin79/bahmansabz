@@ -5,36 +5,57 @@ import { getUsers, USERS_PAGE_SIZE } from "@/app/_utils/users";
 import { UsersTable } from "./_components/UsersTable";
 
 function getStringParam(
-  value: string | string[] | undefined,
+  value: string | string[] | undefined
 ): string | undefined {
-  if (value == null) return undefined;
-  return Array.isArray(value) ? value[0] : value;
+  return value == null ? undefined : Array.isArray(value) ? value[0] : value;
 }
 
 const VALID_SORT_BY = new Set(["firstName", "age"]);
 const VALID_ORDER = new Set(["asc", "desc"]);
+const VALID_ROLES = new Set(["admin", "moderator", "user"]);
 
 export default async function UsersPage({
   searchParams,
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const params = await searchParams;
-  const q = getStringParam(params.q);
-  const pageParam = getStringParam(params.page);
-  const pageNum = Math.max(1, Number(pageParam) || 1);
-  const sortByParam = getStringParam(params.sortBy);
-  const orderParam = getStringParam(params.order);
+  const raw = await searchParams;
+  const q = getStringParam(raw.q);
+  const pageNum = Math.max(1, Number(getStringParam(raw.page)) || 1);
+  const sortByParam = getStringParam(raw.sortBy);
+  const orderParam = getStringParam(raw.order);
+  const roleParam = getStringParam(raw.role);
   const sortBy =
-    sortByParam && VALID_SORT_BY.has(sortByParam)
-      ? (sortByParam as "firstName" | "age")
-      : undefined;
+    sortByParam && VALID_SORT_BY.has(sortByParam) ?
+      (sortByParam as "firstName" | "age")
+    : undefined;
   const order =
-    orderParam && VALID_ORDER.has(orderParam)
-      ? (orderParam as "asc" | "desc")
-      : undefined;
+    orderParam && VALID_ORDER.has(orderParam) ?
+      (orderParam as "asc" | "desc")
+    : undefined;
+  const roleFilter =
+    roleParam && VALID_ROLES.has(roleParam) ?
+      { key: "role" as const, value: roleParam }
+    : undefined;
 
-  const { users, total } = await getUsers(pageNum, q, sortBy, order);
+  const { users, total } = await getUsers(
+    pageNum,
+    q,
+    sortBy,
+    order,
+    roleFilter
+  );
+
+  const linkParams = {
+    ...(q ? { q } : {}),
+    ...(sortBy ? { sortBy } : {}),
+    ...(order ? { order } : {}),
+    ...(roleFilter ? { role: roleFilter.value } : {}),
+  };
+  const tableParams = {
+    ...linkParams,
+    ...(pageNum > 1 ? { page: String(pageNum) } : {}),
+  };
 
   return (
     <main>
@@ -69,10 +90,7 @@ export default async function UsersPage({
               basePath="/users"
               sortBy={sortBy}
               order={order}
-              params={{
-                ...(q ? { q } : {}),
-                ...(pageNum > 1 ? { page: String(pageNum) } : {}),
-              }}
+              params={tableParams}
             />
             <Box mt={4} display="flex" justifyContent="center">
               <PaginationComponent
@@ -80,11 +98,7 @@ export default async function UsersPage({
                 total={total}
                 pageSize={USERS_PAGE_SIZE}
                 basePath="/users"
-                params={{
-                  ...(q ? { q } : {}),
-                  ...(sortBy ? { sortBy } : {}),
-                  ...(order ? { order } : {}),
-                }}
+                params={linkParams}
               />
             </Box>
           </>
