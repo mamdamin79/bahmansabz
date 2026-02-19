@@ -1,4 +1,4 @@
-import type { UsersResponse } from "@/app/_types/users.types";
+import type { UserDetail, UsersResponse } from "@/app/_types/users.types";
 import { API_BASE } from "./api";
 
 const PAGE_SIZE = 20;
@@ -28,6 +28,18 @@ export async function getUsers(
   } catch (err) {
     console.error("[Users] Failed to fetch users:", err);
     return { users: [], total: 0, skip: 0, limit: 0 };
+  }
+}
+
+export async function getUserById(id: string | number): Promise<UserDetail | null> {
+  const url = `${API_BASE}/users/${id}`;
+  try {
+    const res = await fetch(url, { next: { revalidate: 3600 } });
+    if (!res.ok) return null;
+    return (await res.json()) as UserDetail;
+  } catch (err) {
+    console.error("[Users] Failed to fetch user:", err);
+    return null;
   }
 }
 

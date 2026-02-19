@@ -22,3 +22,19 @@ export interface UsersResponse {
   skip: number;
   limit: number;
 }
+
+/** Single user from GET /users/:id (DummyJSON) */
+export interface UserDetail extends User {
+  maidenName?: string;
+  birthDate?: string;
+  bloodGroup?: string;
+  university?: string;
+  address?: {
+    address: string;
+    city: string;
+    state: string;
+    stateCode: string;
+    postalCode: string;
+    country: string;
+  };
+}
