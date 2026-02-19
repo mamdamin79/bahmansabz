@@ -15,16 +15,19 @@ interface TableSortHeaderProps {
   params?: Record<string, string>;
 }
 
+const SORT_PARAM_KEYS = ["sortBy", "order"];
+
 function buildSortHref(
   basePath: string,
   sortKey: string,
   currentSortBy: string | undefined,
   currentOrder: SortOrder | undefined,
-  params?: Record<string, string>
+  params?: Record<string, string>,
 ): string {
   const search = new URLSearchParams();
   if (params) {
     for (const [key, value] of Object.entries(params)) {
+      if (SORT_PARAM_KEYS.includes(key)) continue;
       if (value) search.set(key, value);
     }
   }
@@ -36,9 +39,8 @@ function buildSortHref(
   } else if (currentOrder === "asc") {
     search.set("sortBy", sortKey);
     search.set("order", "desc");
-  } else {
-    // currentOrder === "desc" → third click: clear sort (do not set sortBy/order)
   }
+  // else: third click — clear sort (sortBy/order not in URL; we never copied them)
   const query = search.toString();
   return query ? `${basePath}?${query}` : basePath;
 }
@@ -66,18 +68,26 @@ export function TableSortHeader({
         whiteSpace="nowrap"
       >
         <Link
-          href={buildSortHref(basePath, sortKey, currentSortBy, currentOrder, params)}
+          href={buildSortHref(
+            basePath,
+            sortKey,
+            currentSortBy,
+            currentOrder,
+            params,
+          )}
         >
-          <Box
-            as="span"
-            display="inline-flex"
-            alignItems="center"
-            gap={1.5}
-          >
+          <Box as="span" display="inline-flex" alignItems="center" gap={1.5}>
             {label}
-            <Box as="span" display="inline-flex" alignItems="center" aria-hidden>
+            <Box
+              as="span"
+              display="inline-flex"
+              alignItems="center"
+              aria-hidden
+            >
               {order === "asc" && <ChevronUp size={iconSize} strokeWidth={2} />}
-              {order === "desc" && <ChevronDown size={iconSize} strokeWidth={2} />}
+              {order === "desc" && (
+                <ChevronDown size={iconSize} strokeWidth={2} />
+              )}
               {!order && <ArrowUpDown size={iconSize} strokeWidth={2} />}
             </Box>
           </Box>

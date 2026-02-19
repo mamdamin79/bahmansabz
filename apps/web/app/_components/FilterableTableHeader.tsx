@@ -29,7 +29,7 @@ function buildFilterHref(
   const search = new URLSearchParams();
   if (params) {
     for (const [key, val] of Object.entries(params)) {
-      if (key !== filterKey && val) search.set(key, val);
+      if (key !== filterKey && key !== "page" && val) search.set(key, val);
     }
   }
   if (value) search.set(filterKey, value);

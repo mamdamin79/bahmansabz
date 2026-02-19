@@ -14,7 +14,7 @@ interface PaginationComponentProps {
 function buildHref(
   basePath: string,
   page: number,
-  params?: Record<string, string>
+  params?: Record<string, string>,
 ): string {
   const search = new URLSearchParams();
   if (params) {

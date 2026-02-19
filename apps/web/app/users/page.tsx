@@ -5,7 +5,7 @@ import { getUsers, USERS_PAGE_SIZE } from "@/app/_utils/users";
 import { UsersTable } from "./_components/UsersTable";
 
 function getStringParam(
-  value: string | string[] | undefined
+  value: string | string[] | undefined,
 ): string | undefined {
   return value == null ? undefined : Array.isArray(value) ? value[0] : value;
 }
@@ -26,24 +26,24 @@ export default async function UsersPage({
   const orderParam = getStringParam(raw.order);
   const roleParam = getStringParam(raw.role);
   const sortBy =
-    sortByParam && VALID_SORT_BY.has(sortByParam) ?
-      (sortByParam as "firstName" | "age")
-    : undefined;
+    sortByParam && VALID_SORT_BY.has(sortByParam)
+      ? (sortByParam as "firstName" | "age")
+      : undefined;
   const order =
-    orderParam && VALID_ORDER.has(orderParam) ?
-      (orderParam as "asc" | "desc")
-    : undefined;
+    orderParam && VALID_ORDER.has(orderParam)
+      ? (orderParam as "asc" | "desc")
+      : undefined;
   const roleFilter =
-    roleParam && VALID_ROLES.has(roleParam) ?
-      { key: "role" as const, value: roleParam }
-    : undefined;
+    roleParam && VALID_ROLES.has(roleParam)
+      ? { key: "role" as const, value: roleParam }
+      : undefined;
 
   const { users, total } = await getUsers(
     pageNum,
     q,
     sortBy,
     order,
-    roleFilter
+    roleFilter,
   );
 
   const linkParams = {
