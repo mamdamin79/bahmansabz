@@ -1,6 +1,13 @@
 "use client";
 
-import { Box, Button, Field, Input, Stack, Text } from "@chakra-ui/react";
+import {
+  Alert,
+  Box,
+  Button,
+  Field,
+  Input,
+  Stack,
+} from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -45,49 +52,62 @@ export const LoginForm = () => {
   };
 
   return (
-    <Box maxW="md" mx="auto" mt={8}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack gap={4}>
-          <Field.Root invalid={!!errors.username}>
-            <Field.Label>Username</Field.Label>
-            <Input
-              type="text"
-              placeholder="Enter username"
-              autoComplete="username"
-              {...register("username", { required: "Username is required" })}
-            />
-            {errors.username && (
-              <Field.ErrorText>{errors.username.message}</Field.ErrorText>
-            )}
-          </Field.Root>
-          <Field.Root invalid={!!errors.password}>
-            <Field.Label>Password</Field.Label>
-            <Input
-              type="password"
-              placeholder="Enter password"
-              autoComplete="current-password"
-              {...register("password", { required: "Password is required" })}
-            />
-            {errors.password && (
-              <Field.ErrorText>{errors.password.message}</Field.ErrorText>
-            )}
-          </Field.Root>
-          {errors.root && (
-            <Text color="red.500" fontSize="sm">
-              {errors.root.message}
-            </Text>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Stack gap={5}>
+        <Field.Root invalid={!!errors.username}>
+          <Field.Label fontWeight="medium" color="gray.600" _dark={{ color: "gray.400" }}>
+            Username
+          </Field.Label>
+          <Input
+            size="lg"
+            type="text"
+            placeholder="Enter your username"
+            autoComplete="username"
+            borderRadius="lg"
+            _focusVisible={{ ringColor: "emerald.500" }}
+            {...register("username", { required: "Username is required" })}
+          />
+          {errors.username && (
+            <Field.ErrorText>{errors.username.message}</Field.ErrorText>
           )}
-          <Button
-            type="submit"
-            colorScheme="emerald"
-            loading={isPending}
-            loadingText="Logging in..."
-            width="full"
-          >
-            Login
-          </Button>
-        </Stack>
-      </form>
-    </Box>
+        </Field.Root>
+        <Field.Root invalid={!!errors.password}>
+          <Field.Label fontWeight="medium" color="gray.600" _dark={{ color: "gray.400" }}>
+            Password
+          </Field.Label>
+          <Input
+            size="lg"
+            type="password"
+            placeholder="Enter your password"
+            autoComplete="current-password"
+            borderRadius="lg"
+            _focusVisible={{ ringColor: "emerald.500" }}
+            {...register("password", { required: "Password is required" })}
+          />
+          {errors.password && (
+            <Field.ErrorText>{errors.password.message}</Field.ErrorText>
+          )}
+        </Field.Root>
+        {errors.root && (
+          <Alert.Root status="error" variant="subtle" borderRadius="lg">
+            <Alert.Indicator />
+            <Alert.Title fontSize="sm">{errors.root.message}</Alert.Title>
+          </Alert.Root>
+        )}
+        <Button
+          type="submit"
+          colorScheme="emerald"
+          size="lg"
+          loading={isPending}
+          loadingText="Signing in..."
+          width="full"
+          borderRadius="lg"
+          fontWeight="semibold"
+          mt={1}
+        >
+          Sign in
+        </Button>
+      </Stack>
+    </form>
   );
 };
