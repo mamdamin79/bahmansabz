@@ -27,12 +27,7 @@ export function UserHeader({
       <Heading as="h1" size="2xl">
         {firstName} {lastName}
       </Heading>
-      <Text
-        fontSize="md"
-        color="gray.500"
-        _dark={{ color: "gray.400" }}
-        mt={1}
-      >
+      <Text fontSize="md" color="gray.500" _dark={{ color: "gray.400" }} mt={1}>
         @{username}
       </Text>
     </Box>

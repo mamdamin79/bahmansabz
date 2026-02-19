@@ -9,11 +9,7 @@ type UserInfoProps = Pick<
 function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <>
-      <Text
-        fontSize="sm"
-        color="gray.500"
-        _dark={{ color: "gray.400" }}
-      >
+      <Text fontSize="sm" color="gray.500" _dark={{ color: "gray.400" }}>
         {label}
       </Text>
       <Text fontSize="sm">{value}</Text>
@@ -52,9 +48,7 @@ export function UserInfo({
           {email && <InfoRow label="Email" value={email} />}
           {phone && <InfoRow label="Phone" value={phone} />}
           {age != null && <InfoRow label="Age" value={String(age)} />}
-          {gender && (
-            <InfoRow label="Gender" value={gender} />
-          )}
+          {gender && <InfoRow label="Gender" value={gender} />}
         </SimpleGrid>
       )}
 
@@ -70,10 +64,14 @@ export function UserInfo({
               borderColor="gray.200"
               _dark={{ borderColor: "gray.700" }}
             >
-              <InfoRow label="Company" value={company!.name} />
+              <InfoRow label="Company" value={company?.name} />
               <InfoRow
                 label="Title"
-                value={[company!.title, company!.department].filter(Boolean).join(" · ") || "—"}
+                value={
+                  [company?.title, company?.department]
+                    .filter(Boolean)
+                    .join(" · ") || "—"
+                }
               />
             </SimpleGrid>
           )}
@@ -87,12 +85,12 @@ export function UserInfo({
               borderColor="gray.200"
               _dark={{ borderColor: "gray.700" }}
             >
-              <InfoRow label="Address" value={address!.address} />
+              <InfoRow label="Address" value={address?.address} />
               <InfoRow
                 label="City"
-                value={`${address!.city}, ${address!.stateCode} ${address!.postalCode}`}
+                value={`${address?.city}, ${address?.stateCode} ${address?.postalCode}`}
               />
-              <InfoRow label="Country" value={address!.country} />
+              <InfoRow label="Country" value={address?.country} />
             </SimpleGrid>
           )}
           {hasUniversity && (
@@ -105,7 +103,7 @@ export function UserInfo({
               borderColor="gray.200"
               _dark={{ borderColor: "gray.700" }}
             >
-              <InfoRow label="University" value={university!} />
+              <InfoRow label="University" value={university ?? ""} />
             </SimpleGrid>
           )}
         </VStack>

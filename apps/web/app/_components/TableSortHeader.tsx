@@ -22,7 +22,7 @@ function buildSortHref(
   sortKey: string,
   currentSortBy: string | undefined,
   currentOrder: SortOrder | undefined,
-  params?: Record<string, string>,
+  params?: Record<string, string>
 ): string {
   const search = new URLSearchParams();
   if (params) {
@@ -73,7 +73,7 @@ export function TableSortHeader({
             sortKey,
             currentSortBy,
             currentOrder,
-            params,
+            params
           )}
         >
           <Box as="span" display="inline-flex" alignItems="center" gap={1.5}>

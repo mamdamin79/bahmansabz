@@ -91,9 +91,11 @@ export function FilterableTableHeader({
         <Menu.Positioner>
           <Menu.Content>
             {options.map((opt) => {
-              const menuValue = opt.value === "" ? ALL_OPTION_SENTINEL : opt.value;
+              const menuValue =
+                opt.value === "" ? ALL_OPTION_SENTINEL : opt.value;
               const isSelected =
-                (opt.value === "" && !currentValue) || opt.value === currentValue;
+                (opt.value === "" && !currentValue) ||
+                opt.value === currentValue;
               return (
                 <Menu.Item
                   key={menuValue}

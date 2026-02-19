@@ -38,7 +38,9 @@ export async function getUsers(
   try {
     const res = await fetch(url, { next: { revalidate: 3600 } });
     if (!res.ok) {
-      console.error(`[Users] API error ${res.status} ${res.statusText}: ${url}`);
+      console.error(
+        `[Users] API error ${res.status} ${res.statusText}: ${url}`
+      );
       return { users: [], total: 0, skip: 0, limit: 0 };
     }
     return (await res.json()) as UsersResponse;
@@ -48,7 +50,9 @@ export async function getUsers(
   }
 }
 
-export async function getUserById(id: string | number): Promise<UserDetail | null> {
+export async function getUserById(
+  id: string | number
+): Promise<UserDetail | null> {
   const url = `${API_BASE}/users/${id}`;
   try {
     const res = await fetch(url, { next: { revalidate: 3600 } });

@@ -21,11 +21,7 @@ export default function ProductDetailLoading() {
           align="flex-start"
         >
           <Box flex={1} maxW={{ md: "50%" }}>
-            <Skeleton
-              width="100%"
-              paddingBottom="75%"
-              borderRadius="lg"
-            />
+            <Skeleton width="100%" paddingBottom="75%" borderRadius="lg" />
           </Box>
 
           <VStack flex={1} align="stretch" gap={5}>

@@ -1,7 +1,7 @@
 import { Badge, Box, Table, Text } from "@chakra-ui/react";
-import type { User } from "@/app/_types/users.types";
 import { FilterableTableHeader } from "@/app/_components/FilterableTableHeader";
 import { TableSortHeader } from "@/app/_components/TableSortHeader";
+import type { User } from "@/app/_types/users.types";
 import type { UsersSortBy, UsersSortOrder } from "@/app/_utils/users";
 import { UserTableRow } from "./UserTableRow";
 

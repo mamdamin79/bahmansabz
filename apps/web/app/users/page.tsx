@@ -5,7 +5,7 @@ import { getUsers, USERS_PAGE_SIZE } from "@/app/_utils/users";
 import { UsersTable } from "./_components/UsersTable";
 
 function getStringParam(
-  value: string | string[] | undefined,
+  value: string | string[] | undefined
 ): string | undefined {
   return value == null ? undefined : Array.isArray(value) ? value[0] : value;
 }
@@ -43,7 +43,7 @@ export default async function UsersPage({
     q,
     sortBy,
     order,
-    roleFilter,
+    roleFilter
   );
 
   const linkParams = {
