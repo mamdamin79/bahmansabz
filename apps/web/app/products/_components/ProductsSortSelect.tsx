@@ -1,6 +1,6 @@
 "use client";
 
-import { HStack, NativeSelect, Text } from "@chakra-ui/react";
+import { Box, HStack, NativeSelect } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { buildProductsQuery, productsPath } from "./products-query";
 
@@ -42,17 +42,17 @@ export function ProductsSortSelect({
 
   return (
     <HStack align="center" gap={2} flexShrink={0}>
-      <Text
-        as="label"
-        htmlFor="products-sort"
+      <Box
         fontSize="sm"
         fontWeight="medium"
         color="gray.600"
         _dark={{ color: "gray.400" }}
         whiteSpace="nowrap"
       >
-        Sort by
-      </Text>
+        <label htmlFor="products-sort" style={{ cursor: "pointer" }}>
+          Sort by
+        </label>
+      </Box>
       <NativeSelect.Root size="md" maxW="48">
         <NativeSelect.Field
           id="products-sort"
