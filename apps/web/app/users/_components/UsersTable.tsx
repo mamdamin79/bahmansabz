@@ -1,12 +1,24 @@
 import { Badge, Box, Table, Text } from "@chakra-ui/react";
 import type { User } from "@/app/_types/users.types";
+import { TableSortHeader } from "@/app/_components/TableSortHeader";
+import type { UsersSortBy, UsersSortOrder } from "@/app/_utils/users";
 import { UserTableRow } from "./UserTableRow";
 
 interface UsersTableProps {
   users: User[];
+  basePath: string;
+  sortBy?: UsersSortBy;
+  order?: UsersSortOrder;
+  params?: Record<string, string>;
 }
 
-export function UsersTable({ users }: UsersTableProps) {
+export function UsersTable({
+  users,
+  basePath,
+  sortBy,
+  order,
+  params,
+}: UsersTableProps) {
   return (
     <Box overflowX="auto">
       <Table.Root size="sm" variant="outline">
@@ -14,10 +26,24 @@ export function UsersTable({ users }: UsersTableProps) {
           <Table.Row>
             <Table.ColumnHeader>#</Table.ColumnHeader>
             <Table.ColumnHeader>Avatar</Table.ColumnHeader>
-            <Table.ColumnHeader>Name</Table.ColumnHeader>
+            <TableSortHeader
+              label="Name"
+              sortKey="firstName"
+              currentSortBy={sortBy}
+              currentOrder={order}
+              basePath={basePath}
+              params={params}
+            />
             <Table.ColumnHeader>Email</Table.ColumnHeader>
             <Table.ColumnHeader>Phone</Table.ColumnHeader>
-            <Table.ColumnHeader>Age</Table.ColumnHeader>
+            <TableSortHeader
+              label="Age"
+              sortKey="age"
+              currentSortBy={sortBy}
+              currentOrder={order}
+              basePath={basePath}
+              params={params}
+            />
             <Table.ColumnHeader>Role</Table.ColumnHeader>
             <Table.ColumnHeader>Company</Table.ColumnHeader>
           </Table.Row>

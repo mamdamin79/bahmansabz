@@ -3,15 +3,22 @@ import { API_BASE } from "./api";
 
 const PAGE_SIZE = 20;
 
+export type UsersSortBy = "firstName" | "age";
+export type UsersSortOrder = "asc" | "desc";
+
 export async function getUsers(
   page = 1,
   q?: string | null,
+  sortBy?: UsersSortBy | null,
+  order?: UsersSortOrder | null
 ): Promise<UsersResponse> {
   const skip = (page - 1) * PAGE_SIZE;
   const params = new URLSearchParams();
   params.set("limit", String(PAGE_SIZE));
   params.set("skip", String(skip));
   if (q?.trim()) params.set("q", q.trim());
+  if (sortBy) params.set("sortBy", sortBy);
+  if (order) params.set("order", order);
 
   const endpoint = q?.trim()
     ? `${API_BASE}/users/search`
