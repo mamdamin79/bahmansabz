@@ -1,10 +1,10 @@
 import {
+  Alert,
   Box,
   Container,
-  Heading,
+  Flex,
   SimpleGrid,
   Text,
-  VStack,
 } from "@chakra-ui/react";
 import { cookies } from "next/headers";
 import { decryptSession } from "@/app/utils/session";
@@ -30,77 +30,97 @@ const getProfileData = async () => {
   return { error: "Failed to fetch profile data" };
 };
 
+function InfoRow({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <Box>
+      <Text
+        fontSize="xs"
+        fontWeight="medium"
+        color="gray.500"
+        _dark={{ color: "gray.400" }}
+        textTransform="uppercase"
+        letterSpacing="wider"
+        mb={1}
+      >
+        {label}
+      </Text>
+      <Text fontSize="md" fontWeight="medium" color="gray.800" _dark={{ color: "gray.100" }}>
+        {value}
+      </Text>
+    </Box>
+  );
+}
+
 export default async function ProfilePage() {
   const profileData = await getProfileData();
   if (profileData.error) {
     return (
-      <Container maxW="4xl" py={10}>
-        <Text color="red.500">{profileData.error}</Text>
+      <Container maxW="2xl" py={10} px={4}>
+        <Alert.Root status="error" variant="subtle" borderRadius="xl">
+          <Alert.Indicator />
+          <Alert.Title>{profileData.error}</Alert.Title>
+        </Alert.Root>
       </Container>
     );
   }
 
+  const fullName = [profileData.firstName, profileData.lastName].filter(Boolean).join(" ") || "—";
+
   return (
-    <Container maxW="4xl" py={10}>
-      <Heading as="h1" size="xl" mb={6}>
-        Profile
-      </Heading>
-      <SimpleGrid columns={{ base: 1, md: 2 }} gap={6}>
+    <Flex
+      minH="calc(100vh - 56px)"
+      py={10}
+      px={4}
+    >
+      <Container maxW="3xl">
+        <Box mb={8}>
+          <Text
+            as="h1"
+            fontSize="2xl"
+            fontWeight="bold"
+            color="gray.800"
+            _dark={{ color: "white" }}
+            letterSpacing="tight"
+          >
+            Profile
+          </Text>
+          <Text
+            mt={1}
+            fontSize="sm"
+            color="gray.600"
+            _dark={{ color: "gray.400" }}
+          >
+            Your account information
+          </Text>
+        </Box>
+
         <Box
-          p={6}
-          borderRadius="lg"
+          borderRadius="2xl"
+          shadow="lg"
           borderWidth="1px"
           borderColor="gray.200"
-          bg="gray.50"
-          _dark={{ bg: "gray.800", borderColor: "gray.700" }}
+          overflow="hidden"
         >
-          <VStack align="stretch" gap={3}>
-            <Text
-              fontWeight="semibold"
-              color="gray.600"
-              _dark={{ color: "gray.400" }}
-            >
-              Name
+          <Box px={{ base: 5, sm: 6 }} py={5} borderBottomWidth="1px" borderColor="gray.200" _dark={{ borderColor: "gray.700" }}>
+            <Text fontSize="sm" fontWeight="semibold" color="gray.600" _dark={{ color: "gray.400" }}>
+              Personal information
             </Text>
-            <Text fontSize="lg">
-              {profileData.firstName} {profileData.lastName}
-            </Text>
-            <Text
-              fontWeight="semibold"
-              color="gray.600"
-              _dark={{ color: "gray.400" }}
-            >
-              Email
-            </Text>
-            <Text fontSize="lg">{profileData.email}</Text>
-            <Text
-              fontWeight="semibold"
-              color="gray.600"
-              _dark={{ color: "gray.400" }}
-            >
-              Username
-            </Text>
-            <Text fontSize="lg">{profileData.username}</Text>
-          </VStack>
+          </Box>
+          <Box px={{ base: 5, sm: 6 }} py={6}>
+            <SimpleGrid columns={{ base: 1, sm: 2 }} gap={6}>
+              <InfoRow label="Full name" value={fullName} />
+              <InfoRow label="Username" value={profileData.username ?? "—"} />
+              <InfoRow label="Email" value={profileData.email ?? "—"} />
+            </SimpleGrid>
+          </Box>
         </Box>
-        <Box
-          p={6}
-          borderRadius="lg"
-          borderWidth="1px"
-          borderColor="gray.200"
-          bg="gray.50"
-          _dark={{ bg: "gray.800", borderColor: "gray.700" }}
-        >
-          <VStack align="stretch" gap={3}>
-            <Heading as="h2" size="md">
-              Details
-            </Heading>
-            <Text>
-              Name: {profileData.firstName} {profileData.lastName}
-            </Text>
-          </VStack>
-        </Box>
-      </SimpleGrid>
-    </Container>
+      </Container>
+    </Flex>
   );
 }
