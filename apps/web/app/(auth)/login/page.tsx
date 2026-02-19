@@ -1,10 +1,4 @@
-import {
-  Box,
-  Center,
-  Flex,
-  Spinner,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Center, Flex, Spinner, Text } from "@chakra-ui/react";
 import { Suspense } from "react";
 import { LoginForm } from "./_components/LoginForm";
 
@@ -15,7 +9,7 @@ export default function LoginPage() {
       align="center"
       justify="center"
       px={4}
-      py={10}    
+      py={10}
     >
       <Center w="full" maxW="md">
         <Box

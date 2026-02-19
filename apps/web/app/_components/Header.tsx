@@ -1,10 +1,4 @@
-import {
-  Box,
-  Link as ChakraLink,
-  Flex,
-  HStack,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Link as ChakraLink, Flex, HStack } from "@chakra-ui/react";
 import Link from "next/link";
 import { AccountNavigation } from "./AccountNavigation";
 

@@ -3,7 +3,6 @@
 import {
   Avatar,
   Box,
-  Flex,
   Link as ChakraLink,
   Menu,
   Spinner,
@@ -14,7 +13,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "../_stores/auth.store";
 
-function displayName(session: { firstName?: string; lastName?: string; username: string }) {
+function displayName(session: {
+  firstName?: string;
+  lastName?: string;
+  username: string;
+}) {
   const name = [session.firstName, session.lastName].filter(Boolean).join(" ");
   return name.trim() || session.username;
 }
@@ -105,7 +108,6 @@ export const AccountNavigation = () => {
                   border="none"
                   outline="none"
                   width="full"
-                  
                 >
                   <Box color="gray.500" _dark={{ color: "gray.400" }}>
                     <User size={18} strokeWidth={2} />

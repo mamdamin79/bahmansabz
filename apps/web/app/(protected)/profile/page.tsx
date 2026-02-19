@@ -30,13 +30,7 @@ const getProfileData = async () => {
   return { error: "Failed to fetch profile data" };
 };
 
-function InfoRow({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
+function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <Box>
       <Text
@@ -50,7 +44,12 @@ function InfoRow({
       >
         {label}
       </Text>
-      <Text fontSize="md" fontWeight="medium" color="gray.800" _dark={{ color: "gray.100" }}>
+      <Text
+        fontSize="md"
+        fontWeight="medium"
+        color="gray.800"
+        _dark={{ color: "gray.100" }}
+      >
         {value}
       </Text>
     </Box>
@@ -70,14 +69,12 @@ export default async function ProfilePage() {
     );
   }
 
-  const fullName = [profileData.firstName, profileData.lastName].filter(Boolean).join(" ") || "—";
+  const fullName =
+    [profileData.firstName, profileData.lastName].filter(Boolean).join(" ") ||
+    "—";
 
   return (
-    <Flex
-      minH="calc(100vh - 56px)"
-      py={10}
-      px={4}
-    >
+    <Flex minH="calc(100vh - 56px)" py={10} px={4}>
       <Container maxW="3xl">
         <Box mb={8}>
           <Text
@@ -107,8 +104,19 @@ export default async function ProfilePage() {
           borderColor="gray.200"
           overflow="hidden"
         >
-          <Box px={{ base: 5, sm: 6 }} py={5} borderBottomWidth="1px" borderColor="gray.200" _dark={{ borderColor: "gray.700" }}>
-            <Text fontSize="sm" fontWeight="semibold" color="gray.600" _dark={{ color: "gray.400" }}>
+          <Box
+            px={{ base: 5, sm: 6 }}
+            py={5}
+            borderBottomWidth="1px"
+            borderColor="gray.200"
+            _dark={{ borderColor: "gray.700" }}
+          >
+            <Text
+              fontSize="sm"
+              fontWeight="semibold"
+              color="gray.600"
+              _dark={{ color: "gray.400" }}
+            >
               Personal information
             </Text>
           </Box>

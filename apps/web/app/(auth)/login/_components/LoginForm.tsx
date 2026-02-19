@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  Alert,
-  Box,
-  Button,
-  Field,
-  Input,
-  Stack,
-} from "@chakra-ui/react";
+import { Alert, Button, Field, Input, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -55,7 +48,11 @@ export const LoginForm = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack gap={5}>
         <Field.Root invalid={!!errors.username}>
-          <Field.Label fontWeight="medium" color="gray.600" _dark={{ color: "gray.400" }}>
+          <Field.Label
+            fontWeight="medium"
+            color="gray.600"
+            _dark={{ color: "gray.400" }}
+          >
             Username
           </Field.Label>
           <Input
@@ -72,7 +69,11 @@ export const LoginForm = () => {
           )}
         </Field.Root>
         <Field.Root invalid={!!errors.password}>
-          <Field.Label fontWeight="medium" color="gray.600" _dark={{ color: "gray.400" }}>
+          <Field.Label
+            fontWeight="medium"
+            color="gray.600"
+            _dark={{ color: "gray.400" }}
+          >
             Password
           </Field.Label>
           <Input
