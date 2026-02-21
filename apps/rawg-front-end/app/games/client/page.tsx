@@ -1,6 +1,7 @@
 "use client";
 
-import { useGamesList } from "@/lib/api/games/rawg";
+import { useGamesList } from "@/lib/api/games/games";
+
 
 export default function GamesClientPage() {
   const { data, isLoading, error } = useGamesList({
@@ -11,7 +12,7 @@ export default function GamesClientPage() {
   if (isLoading) return <p className="p-8">Loading games...</p>;
   if (error) return <p className="p-8 text-red-600">Error: {String(error)}</p>;
 
-  const games = data?.results ?? [];
+  const games = data?.data?.results ?? [];
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-8">

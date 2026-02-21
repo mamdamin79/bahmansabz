@@ -1,7 +1,9 @@
-import { gamesList } from "@/lib/api/games/rawg";
 
 // SSG: omit or use export const dynamic = 'force-static'
 // SSR: export const dynamic = 'force-dynamic'
+
+import { gamesList } from "@/lib/api/games/games";
+
 // ISR: export const revalidate = 60
 export const revalidate = 60;
 
