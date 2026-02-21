@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "next dev --port 3001",
     "build": "biome check . && next build",
+    "generate-api": "orval",
     "start": "next start --port 3001",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
@@ -28,6 +29,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "orval": "^7.3.0",
     "postcss": "^8.4.49",
     "typescript": "^5.7.3"
   },

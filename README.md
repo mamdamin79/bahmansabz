@@ -9,20 +9,28 @@ This project is structured as a **Turborepo monorepo** with the following struct
 ```
 bahmansabz/
 ├── apps/
-│   └── web/          # Next.js application
-├── libs/             # Shared libraries
-└── package.json      # Root workspace configuration
+│   ├── web/              # Next.js application (Chakra UI, auth)
+│   └── rawg-front-end/   # Next.js + Tailwind + Orval (RAWG API)
+├── libs/                 # Shared libraries
+└── package.json         # Root workspace configuration
 ```
 
 ### Tech Stack
 
-**Frontend (Web App)**
+**Frontend (Web App — `apps/web`)**
 - **Next.js 15** - React framework with App Router
 - **React 19** - UI library
 - **TypeScript** - Type safety
 - **Chakra UI v3** - Component library with theming and dark mode
 - **next-themes** - Theme provider (light/dark) used with Chakra
 - **Zustand** - Client-side auth state
+
+**Frontend (RAWG — `apps/rawg-front-end`)**
+- **Next.js 15** - App Router
+- **Tailwind CSS v4** - Utility-first CSS
+- **TypeScript** - Type safety
+- **Orval** - Generated types, React Query hooks, and fetchers from OpenAPI (tag-split)
+- **TanStack React Query** - Client-side data fetching
 
 **Development Tools**
 - **Turborepo** - Monorepo build system
@@ -51,8 +59,9 @@ Before you begin, ensure you have the following installed:
    yarn dev
    ```
 
-The application will be available at:
+The applications will be available at:
 - **Web App:** http://localhost:3000
+- **RAWG Front-end:** http://localhost:3001
 
 ## 📦 Available Scripts
 
@@ -61,24 +70,36 @@ The application will be available at:
 ```bash
 # Development
 yarn dev                 # Start all applications in development mode
-yarn build              # Build all applications for production
-yarn lint               # Run linting across all packages
-yarn lint:fix           # Fix linting issues automatically
-yarn format             # Format code with Biome
-yarn format:check       # Check code formatting
-yarn typecheck          # Run TypeScript type checking
+yarn build               # Build all applications for production
+yarn generate-api        # Regenerate RAWG API client (Orval) in apps/rawg-front-end
+yarn lint                # Run linting across all packages
+yarn lint:fix            # Fix linting issues automatically
+yarn format              # Format code with Biome
+yarn format:check        # Check code formatting
+yarn typecheck           # Run TypeScript type checking
 
 # Utilities
-yarn clean              # Clean all build artifacts and node_modules
+yarn clean               # Clean all build artifacts and node_modules
 ```
 
 ### Individual App Commands
 
-**Web App:**
+**Web App (`apps/web`):**
 ```bash
 cd apps/web
-yarn dev                # Start Next.js development server
+yarn dev                # Start Next.js development server (port 3000)
 yarn build              # Build Next.js for production
+yarn start              # Start Next.js in production mode
+yarn lint               # Run Biome linting
+yarn typecheck          # Run TypeScript type checking
+```
+
+**RAWG Front-end (`apps/rawg-front-end`):**
+```bash
+cd apps/rawg-front-end
+yarn dev                # Start Next.js development server (port 3001)
+yarn build              # Build Next.js for production
+yarn generate-api       # Regenerate API from openapi.json (Orval)
 yarn start              # Start Next.js in production mode
 yarn lint               # Run Biome linting
 yarn typecheck          # Run TypeScript type checking
@@ -86,7 +107,8 @@ yarn typecheck          # Run TypeScript type checking
 
 ## 📁 Project Structure
 
-- `apps/web/` - Next.js application
+- `apps/web/` - Next.js application (Chakra UI, auth)
+- `apps/rawg-front-end/` - Next.js + Tailwind + Orval (RAWG API client, tag-split)
 - `libs/` - Shared libraries and packages
 - `turbo.json` - Turborepo pipeline configuration
 - `biome.json` - Biome linting and formatting configuration
@@ -115,6 +137,16 @@ The web app uses **Chakra UI v3** for layout and components, with **next-themes*
 
 - **Colors**: Emerald is used as the primary brand (e.g. header `emerald.700`, login button `colorScheme="emerald"`).
 - **Dark mode**: Supported via `_dark` props (e.g. `_dark={{ bg: "gray.800", borderColor: "gray.700" }}`) and next-themes class.
+
+---
+
+## 🎮 RAWG Front-end (Orval API)
+
+The **rawg-front-end** app uses [Orval](https://orval.dev/) to generate types, React Query hooks, and fetcher functions from a local OpenAPI spec (tag-split). You can fetch data in Server Components (SSR/SSG/ISR) by calling the generated fetchers (e.g. `gamesList`) or use the hooks in Client Components.
+
+- **Generate API**: From the repo root run `yarn generate-api`, or from `apps/rawg-front-end` run `yarn generate-api`. Input: `openapi.json` in the app; output: `lib/api/` (tag folders + model).
+- **Env**: Set `RAWG_API_KEY` (or `NEXT_PUBLIC_RAWG_API_KEY`) in `.env.local`; see `apps/rawg-front-end/.env.example`.
+- **Examples**: `/games` (Server Component + fetcher), `/games/client` (Client Component + hook). See [apps/rawg-front-end/README.md](apps/rawg-front-end/README.md) for details.
 
 ---
 
