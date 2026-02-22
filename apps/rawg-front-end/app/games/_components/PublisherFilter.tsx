@@ -55,6 +55,7 @@ export function PublisherFilter({ publishers }: PublisherFilterProps) {
     } else {
       next.delete("publishers");
     }
+    next.delete("page");
     startTransition(() => {
       router.push(`/games?${next.toString()}`);
     });
