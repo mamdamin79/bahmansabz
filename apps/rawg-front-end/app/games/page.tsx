@@ -2,6 +2,7 @@
 // SSG: omit or use export const dynamic = 'force-static'
 // SSR: export const dynamic = 'force-dynamic'
 
+import { Button } from "@/components/ui/button";
 import { gamesList } from "@/lib/api/games/games";
 
 // ISR: export const revalidate = 60
@@ -13,7 +14,7 @@ export default async function GamesPage() {
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-8">
-      <h1 className="mb-6 text-2xl font-bold">Games (SSR / ISR)</h1>
+      <h1 className="mb-6 text-2xl font-bold">Games (SSR / ISR) <Button>Click me</Button></h1>
       <ul className="space-y-2">
         {games.map((game) => (
           <li
