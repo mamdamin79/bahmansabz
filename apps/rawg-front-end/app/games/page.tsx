@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { gamesList } from "@/lib/api/games/games";
 import { publishersList } from "@/lib/api/publishers/publishers";
+import { GameCard } from "./_components/GameCard";
 import { PublisherFilter } from "./_components/PublisherFilter";
 
 export const dynamic = "force-dynamic";
@@ -34,18 +35,10 @@ export default async function GamesPage({
         </Suspense>
       </div>
       {games.length > 0 ? (
-        <ul className="space-y-2">
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {games.map((game) => (
-            <li
-              key={game.id ?? game.name}
-              className="rounded border border-gray-200 bg-white p-3 shadow-sm"
-            >
-              <span className="font-medium">{game.name}</span>
-              {game.released && (
-                <span className="ml-2 text-sm text-gray-500">
-                  ({game.released})
-                </span>
-              )}
+            <li key={game.id ?? game.slug ?? game.name} className="h-full">
+              <GameCard game={game} />
             </li>
           ))}
         </ul>
