@@ -36,6 +36,8 @@ import type { GameSingleReactions } from './gameSingleReactions';
 import type { GameSingleAddedByStatus } from './gameSingleAddedByStatus';
 import type { GameSingleEsrbRating } from './gameSingleEsrbRating';
 import type { GameSinglePlatformsItem } from './gameSinglePlatformsItem';
+import type { Genre } from './genre';
+import type { Publisher } from './publisher';
 
 export interface GameSingle {
   readonly id?: number;
@@ -101,4 +103,6 @@ export interface GameSingle {
   /** @nullable */
   esrb_rating?: GameSingleEsrbRating;
   platforms?: GameSinglePlatformsItem[];
+  readonly genres?: readonly Genre[];
+  readonly publishers?: readonly Publisher[];
 }

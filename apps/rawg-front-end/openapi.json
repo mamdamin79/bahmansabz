@@ -1915,6 +1915,20 @@
               }
             }
           }
+        },
+        "genres": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Genre"
+          },
+          "readOnly": true
+        },
+        "publishers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Publisher"
+          },
+          "readOnly": true
         }
       }
     },
@@ -2339,6 +2353,20 @@
               }
             }
           }
+        },
+        "genres": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Genre"
+          },
+          "readOnly": true
+        },
+        "publishers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Publisher"
+          },
+          "readOnly": true
         }
       }
     },

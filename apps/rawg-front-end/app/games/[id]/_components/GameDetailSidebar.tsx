@@ -5,15 +5,59 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface GameDetailSidebarProps {
   platformNames: string[];
+  genreNames?: string[];
+  publisherNames?: string[];
   website?: string | null;
 }
 
 export function GameDetailSidebar({
   platformNames,
+  genreNames = [],
+  publisherNames = [],
   website,
 }: GameDetailSidebarProps) {
   return (
     <aside className="space-y-6">
+      {genreNames.length > 0 && (
+        <Card className="border-border/50">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">Genres</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {genreNames.map((name) => (
+                <Badge
+                  key={name}
+                  variant="secondary"
+                  className="font-normal"
+                >
+                  {name}
+                </Badge>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+      {publisherNames.length > 0 && (
+        <Card className="border-border/50">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">Publishers</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-2">
+              {publisherNames.map((name) => (
+                <Badge
+                  key={name}
+                  variant="secondary"
+                  className="font-normal"
+                >
+                  {name}
+                </Badge>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
       {platformNames.length > 0 && (
         <Card className="border-border/50">
           <CardHeader className="pb-2">
