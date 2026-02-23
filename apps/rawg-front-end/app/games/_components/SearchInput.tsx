@@ -8,7 +8,7 @@ export function SearchInput() {
   const defaultValue = searchParams.get("search") ?? "";
 
   return (
-    <div className="mt-4">
+    <div>
       <SharedSearchInput
         basePath="/games"
         queryParam="search"

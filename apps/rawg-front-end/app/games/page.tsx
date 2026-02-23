@@ -2,6 +2,12 @@ import { Suspense } from "react";
 import { gamesList } from "@/lib/api/games/games";
 import { genresList } from "@/lib/api/genres/genres";
 import { publishersList } from "@/lib/api/publishers/publishers";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { GameCard } from "./_components/GameCard";
 import { GamesPagination } from "./_components/GamesPagination";
 import { GenresFilter } from "./_components/GenresFilter";
@@ -30,7 +36,10 @@ export default async function GamesPage({
   const datesParam = params.dates ?? undefined;
   const genresParam = params.genres ?? undefined;
   const searchParam = params.search ?? undefined;
-  const currentPage = Math.max(1, parseInt(String(pageParam ?? "1"), 10) || 1);
+  const currentPage = Math.max(
+    1,
+    parseInt(String(pageParam ?? "1"), 10) || 1
+  );
 
   const [gamesRes, publishersRes, genresRes] = await Promise.all([
     gamesList({
@@ -51,41 +60,76 @@ export default async function GamesPage({
   const totalCount = gamesRes.data?.count ?? 0;
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-8">
-      <h1 className="mb-6 text-2xl font-bold">Games</h1>
-      <div className="mb-6">
-        <Suspense fallback={<PublisherFilterFallback />}>
-          <PublisherFilter publishers={publishers} />
-        </Suspense>
-        <Suspense fallback={<ReleaseDateFallback />}>
-          <ReleaseDate />
-        </Suspense>
-        <GenresFilter genres={genres} />
-        <SearchInput />
+    <main className="min-h-screen bg-muted/30">
+      {/* Page header - same style as detail back bar */}
+      <div className="sticky top-0 z-10 border-b border-border/50 bg-background/80 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-6xl px-4 py-4">
+          <h1 className="text-2xl font-bold tracking-tight">Games</h1>
+        </div>
       </div>
-      {games.length > 0 ? (
-        <>
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {games.map((game) => (
-              <li key={game.id ?? game.slug ?? game.name} className="h-full">
-                <GameCard game={game} />
-              </li>
-            ))}
-          </ul>
-          <Suspense fallback={null}>
-            <GamesPagination
-              currentPage={currentPage}
-              totalCount={totalCount}
-            />
-          </Suspense>
-        </>
-      ) : (
-        <p className="text-muted-foreground rounded-md border border-dashed border-gray-300 bg-gray-50/50 p-6 text-center text-sm">
-          {publishersFilter || datesParam
-            ? "No games found for the selected filters."
-            : "No games found."}
-        </p>
-      )}
+
+      <div className="mx-auto max-w-6xl px-4 py-8">
+        <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
+          {/* Aside: filters */}
+          <aside className="space-y-6 lg:sticky lg:top-18 lg:self-start">
+            <Card className="rounded-2xl border-border/50 shadow-lg">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base">Filters</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Suspense fallback={<PublisherFilterFallback />}>
+                  <PublisherFilter publishers={publishers} />
+                </Suspense>
+                <Suspense fallback={<ReleaseDateFallback />}>
+                  <ReleaseDate />
+                </Suspense>
+                <GenresFilter genres={genres} />
+              </CardContent>
+            </Card>
+          </aside>
+
+          {/* Main: search top left, then games grid */}
+          <div className="min-w-0">
+            <div className="mb-4">
+              <SearchInput />
+            </div>
+
+            {games.length > 0 ? (
+              <>
+                <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                  {games.map((game) => (
+                    <li
+                      key={game.id ?? game.slug ?? game.name}
+                      className="h-full"
+                    >
+                      <GameCard game={game} />
+                    </li>
+                  ))}
+                </ul>
+                <Suspense fallback={null}>
+                  <GamesPagination
+                    currentPage={currentPage}
+                    totalCount={totalCount}
+                  />
+                </Suspense>
+              </>
+            ) : (
+              <Card className="rounded-2xl border-dashed border-border/50">
+                <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+                  <p className="text-muted-foreground text-sm">
+                    {publishersFilter ||
+                    datesParam ||
+                    genresParam ||
+                    searchParam
+                      ? "No games found for the selected filters."
+                      : "No games found."}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </div>
+      </div>
     </main>
   );
 }
@@ -93,8 +137,10 @@ export default async function GamesPage({
 function PublisherFilterFallback() {
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-sm font-medium">Filter by publisher</span>
-      <div className="bg-muted/50 border-input h-9 max-w-md animate-pulse rounded-md border" />
+      <span className="text-sm font-medium text-muted-foreground">
+        Filter by publisher
+      </span>
+      <div className="h-9 max-w-md animate-pulse rounded-md border border-border/50 bg-muted/50" />
     </div>
   );
 }
@@ -102,8 +148,10 @@ function PublisherFilterFallback() {
 function ReleaseDateFallback() {
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-sm font-medium">Filter by release date</span>
-      <div className="bg-muted/50 border-input h-9 max-w-md animate-pulse rounded-md border" />
+      <span className="text-sm font-medium text-muted-foreground">
+        Filter by release date
+      </span>
+      <div className="h-9 max-w-md animate-pulse rounded-md border border-border/50 bg-muted/50" />
     </div>
   );
 }

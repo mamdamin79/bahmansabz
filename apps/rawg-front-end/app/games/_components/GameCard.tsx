@@ -28,13 +28,13 @@ export function GameCard({ game, className }: GameCardProps) {
     <Link href={`/games/${game.id}`} className="block h-full">
       <Card
         className={cn(
-          "flex h-full flex-col overflow-hidden transition-shadow hover:shadow-md",
+          "flex h-full flex-col overflow-hidden rounded-2xl border-border/50 shadow-lg transition-shadow hover:shadow-xl",
           imageUrl && "pt-0",
           className
         )}
       >
         {imageUrl && (
-          <div className="relative aspect-video w-full overflow-hidden bg-muted">
+          <div className="relative aspect-video w-full overflow-hidden rounded-t-2xl bg-muted">
             <Image
               src={imageUrl}
               alt=""
