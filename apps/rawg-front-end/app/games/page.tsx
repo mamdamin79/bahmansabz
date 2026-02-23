@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { GameCard } from "./_components/GameCard";
 import { GamesPagination } from "./_components/GamesPagination";
+import { GamesSort } from "./_components/GamesSort";
 import { GenresFilter } from "./_components/GenresFilter";
 import { PublisherFilter } from "./_components/PublisherFilter";
 import { ReleaseDate } from "./_components/ReleaseDate";
@@ -28,6 +29,7 @@ export default async function GamesPage({
     dates?: string;
     genres?: string;
     search?: string;
+    ordering?: string;
   }>;
 }) {
   const params = await searchParams;
@@ -36,6 +38,7 @@ export default async function GamesPage({
   const datesParam = params.dates ?? undefined;
   const genresParam = params.genres ?? undefined;
   const searchParam = params.search ?? undefined;
+  const orderingParam = params.ordering ?? undefined;
   const currentPage = Math.max(
     1,
     parseInt(String(pageParam ?? "1"), 10) || 1
@@ -49,6 +52,7 @@ export default async function GamesPage({
       ...(datesParam && { dates: datesParam }),
       ...(genresParam && { genres: genresParam }),
       ...(searchParam && { search: searchParam }),
+      ...(orderingParam && { ordering: orderingParam }),
     }),
     publishersList({ page_size: 50 }),
     genresList({ page_size: 50 }),
@@ -90,8 +94,13 @@ export default async function GamesPage({
 
           {/* Main: search top left, then games grid */}
           <div className="min-w-0">
-            <div className="mb-4">
-              <SearchInput />
+            <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-end sm:gap-6">
+              <div className="min-w-0 flex-1 sm:max-w-xs">
+                <SearchInput />
+              </div>
+              <div className="w-full sm:w-48">
+                <GamesSort />
+              </div>
             </div>
 
             {games.length > 0 ? (
@@ -120,7 +129,8 @@ export default async function GamesPage({
                     {publishersFilter ||
                     datesParam ||
                     genresParam ||
-                    searchParam
+                    searchParam ||
+                    orderingParam
                       ? "No games found for the selected filters."
                       : "No games found."}
                   </p>
