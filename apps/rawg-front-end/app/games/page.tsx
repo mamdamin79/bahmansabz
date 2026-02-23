@@ -15,6 +15,7 @@ import { GenresFilter } from "./_components/GenresFilter";
 import { PublisherFilter } from "./_components/PublisherFilter";
 import { ReleaseDate } from "./_components/ReleaseDate";
 import { SearchInput } from "./_components/SearchInput";
+import { MetacriticRange } from "./_components/MetacriticRange";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +31,7 @@ export default async function GamesPage({
     genres?: string;
     search?: string;
     ordering?: string;
+    metacritic?: string;
   }>;
 }) {
   const params = await searchParams;
@@ -39,6 +41,7 @@ export default async function GamesPage({
   const genresParam = params.genres ?? undefined;
   const searchParam = params.search ?? undefined;
   const orderingParam = params.ordering ?? undefined;
+  const metacriticParam = params.metacritic ?? undefined;
   const currentPage = Math.max(
     1,
     parseInt(String(pageParam ?? "1"), 10) || 1
@@ -53,6 +56,7 @@ export default async function GamesPage({
       ...(genresParam && { genres: genresParam }),
       ...(searchParam && { search: searchParam }),
       ...(orderingParam && { ordering: orderingParam }),
+      ...(metacriticParam && { metacritic: metacriticParam }),
     }),
     publishersList({ page_size: 50 }),
     genresList({ page_size: 50 }),
@@ -88,6 +92,7 @@ export default async function GamesPage({
                   <ReleaseDate />
                 </Suspense>
                 <GenresFilter genres={genres} />
+                <MetacriticRange metacriticParam={metacriticParam} />
               </CardContent>
             </Card>
           </aside>
@@ -130,7 +135,8 @@ export default async function GamesPage({
                     datesParam ||
                     genresParam ||
                     searchParam ||
-                    orderingParam
+                    orderingParam ||
+                    metacriticParam
                       ? "No games found for the selected filters."
                       : "No games found."}
                   </p>
