@@ -29,7 +29,9 @@ export function GameDetailStats({
         <Card className="overflow-hidden border-border/50">
           <CardContent className="flex flex-col items-center gap-1 pb-5 pt-5">
             <Gamepad2 className="size-5 text-muted-foreground" />
-            <span className="text-2xl font-bold tabular-nums">{metacritic}</span>
+            <span className="text-2xl font-bold tabular-nums">
+              {metacritic}
+            </span>
             <span className="text-xs font-medium text-muted-foreground">
               Metacritic
             </span>
