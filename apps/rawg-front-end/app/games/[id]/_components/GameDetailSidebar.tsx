@@ -26,11 +26,7 @@ export function GameDetailSidebar({
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {genreNames.map((name) => (
-                <Badge
-                  key={name}
-                  variant="secondary"
-                  className="font-normal"
-                >
+                <Badge key={name} variant="secondary" className="font-normal">
                   {name}
                 </Badge>
               ))}
@@ -46,11 +42,7 @@ export function GameDetailSidebar({
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {publisherNames.map((name) => (
-                <Badge
-                  key={name}
-                  variant="secondary"
-                  className="font-normal"
-                >
+                <Badge key={name} variant="secondary" className="font-normal">
                   {name}
                 </Badge>
               ))}

@@ -1,23 +1,18 @@
 import { Suspense } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { gamesList } from "@/lib/api/games/games";
 import { genresList } from "@/lib/api/genres/genres";
 import { platformsList } from "@/lib/api/platforms/platforms";
 import { publishersList } from "@/lib/api/publishers/publishers";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { GameCard } from "./_components/GameCard";
 import { GamesPagination } from "./_components/GamesPagination";
 import { GamesSort } from "./_components/GamesSort";
 import { GenresFilter } from "./_components/GenresFilter";
+import { MetacriticRange } from "./_components/MetacriticRange";
+import { PlatformFilter } from "./_components/PlatformFilter";
 import { PublisherFilter } from "./_components/PublisherFilter";
 import { ReleaseDate } from "./_components/ReleaseDate";
 import { SearchInput } from "./_components/SearchInput";
-import { MetacriticRange } from "./_components/MetacriticRange";
-import { PlatformFilter } from "./_components/PlatformFilter";
 
 export const dynamic = "force-dynamic";
 
@@ -46,10 +41,7 @@ export default async function GamesPage({
   const orderingParam = params.ordering ?? undefined;
   const metacriticParam = params.metacritic ?? undefined;
   const platformsParam = params.platforms ?? undefined;
-  const currentPage = Math.max(
-    1,
-    parseInt(String(pageParam ?? "1"), 10) || 1
-  );
+  const currentPage = Math.max(1, parseInt(String(pageParam ?? "1"), 10) || 1);
 
   const [gamesRes, publishersRes, genresRes, platformsRes] = await Promise.all([
     gamesList({

@@ -1,50 +1,50 @@
-"use client"
+"use client";
 
-import { useRouter, useSearchParams } from "next/navigation"
-import { useEffect, useState, useTransition } from "react"
-import { Label } from "@/components/ui/label"
-import { Slider } from "@/components/ui/slider"
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 
-const PARAM_KEY = "metacritic"
-const DEFAULT_RANGE: [number, number] = [1, 100]
+const PARAM_KEY = "metacritic";
+const DEFAULT_RANGE: [number, number] = [1, 100];
 
 function parseMetacriticParam(param: string | undefined): [number, number] {
-  if (!param?.trim()) return DEFAULT_RANGE
-  const parts = param.split(",").map((s) => parseInt(s.trim(), 10))
-  const a = Number.isNaN(parts[0]) ? 1 : Math.max(1, Math.min(100, parts[0]))
-  const b = Number.isNaN(parts[1]) ? 100 : Math.max(1, Math.min(100, parts[1]))
-  return [Math.min(a, b), Math.max(a, b)]
+  if (!param?.trim()) return DEFAULT_RANGE;
+  const parts = param.split(",").map((s) => parseInt(s.trim(), 10));
+  const a = Number.isNaN(parts[0]) ? 1 : Math.max(1, Math.min(100, parts[0]));
+  const b = Number.isNaN(parts[1]) ? 100 : Math.max(1, Math.min(100, parts[1]));
+  return [Math.min(a, b), Math.max(a, b)];
 }
 
 export function MetacriticRange({
   metacriticParam,
 }: {
-  metacriticParam?: string
+  metacriticParam?: string;
 }) {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [isPending, startTransition] = useTransition()
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
   const [value, setValue] = useState<[number, number]>(() =>
     parseMetacriticParam(metacriticParam)
-  )
+  );
 
   useEffect(() => {
-    setValue(parseMetacriticParam(metacriticParam))
-  }, [metacriticParam])
+    setValue(parseMetacriticParam(metacriticParam));
+  }, [metacriticParam]);
 
   const handleValueCommit = (next: number[]) => {
-    const [min, max] = next as [number, number]
-    const nextParams = new URLSearchParams(searchParams)
+    const [min, max] = next as [number, number];
+    const nextParams = new URLSearchParams(searchParams);
     if (min === DEFAULT_RANGE[0] && max === DEFAULT_RANGE[1]) {
-      nextParams.delete(PARAM_KEY)
+      nextParams.delete(PARAM_KEY);
     } else {
-      nextParams.set(PARAM_KEY, `${min},${max}`)
+      nextParams.set(PARAM_KEY, `${min},${max}`);
     }
-    nextParams.delete("page")
+    nextParams.delete("page");
     startTransition(() => {
-      router.push(`/games?${nextParams.toString()}`)
-    })
-  }
+      router.push(`/games?${nextParams.toString()}`);
+    });
+  };
 
   return (
     <div
@@ -66,5 +66,5 @@ export function MetacriticRange({
         onValueCommit={handleValueCommit}
       />
     </div>
-  )
+  );
 }

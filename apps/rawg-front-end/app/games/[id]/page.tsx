@@ -37,12 +37,12 @@ export default async function GameDetailPage({ params }: GamePageProps) {
     ?.map((p) => p.platform?.name)
     .filter(Boolean) as string[] | undefined;
 
-  const genreNames = game.genres
-    ?.map((g) => g.name)
-    .filter(Boolean) as string[] | undefined;
-  const publisherNames = game.publishers
-    ?.map((p) => p.name)
-    .filter(Boolean) as string[] | undefined;
+  const genreNames = game.genres?.map((g) => g.name).filter(Boolean) as
+    | string[]
+    | undefined;
+  const publisherNames = game.publishers?.map((p) => p.name).filter(Boolean) as
+    | string[]
+    | undefined;
 
   return (
     <main className="min-h-screen bg-muted/30">
