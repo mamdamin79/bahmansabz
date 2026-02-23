@@ -1,5 +1,7 @@
 "use client";
 
+// This is a test component to test the react query generated hooks integration
+
 import { useGamesList } from "@/lib/api/games/games";
 
 export default function GamesClientPage() {
