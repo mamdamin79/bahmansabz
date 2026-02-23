@@ -1,8 +1,8 @@
 "use client";
-import { useRouter, useSearchParams } from "next/navigation";
+
 import { useTransition } from "react";
-import { Label } from "@/components/ui/label";
-import { Genre } from "@/lib/api/model/genre";
+import { useRouter, useSearchParams } from "next/navigation";
+import type { Genre } from "@/lib/api/model";
 import {
   Combobox,
   ComboboxChip,
@@ -15,21 +15,20 @@ import {
   ComboboxValue,
   useComboboxAnchor,
 } from "@/components/ui/combobox";
-import * as React from "react";
+import { Label } from "@/components/ui/label";
 
 interface GenresFilterProps {
   genres: Genre[];
 }
 
 function getGenreId(g: Genre): string {
-    return String(g.id ?? g.slug ?? g.name);
-  }
-  
-  /** Slug for URL searchParams (API accepts slugs e.g. electronic-arts,microsoft-studios) */
-  function getGenreSlug(g: Genre): string {
-    return g.slug ?? String(g.id ?? g.name);
-  }
-  
+  return String(g.id ?? g.slug ?? g.name);
+}
+
+/** Slug for URL searchParams (API accepts slugs e.g. action,rpg,indie) */
+function getGenreSlug(g: Genre): string {
+  return g.slug ?? String(g.id ?? g.name);
+}
 export function GenresFilter({ genres }: GenresFilterProps) {
   const router = useRouter();
   const searchParams = useSearchParams();

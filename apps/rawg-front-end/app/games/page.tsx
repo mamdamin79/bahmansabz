@@ -7,6 +7,7 @@ import { PublisherFilter } from "./_components/PublisherFilter";
 import { ReleaseDate } from "./_components/ReleaseDate";
 import { GenresFilter } from "./_components/GenresFilter";
 import { genresList } from "@/lib/api/genres/genres";
+import { SearchInput } from "./_components/SearchInput";
 
 export const dynamic = "force-dynamic";
 
@@ -15,13 +16,14 @@ const PAGE_SIZE = 12;
 export default async function GamesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ publishers?: string; page?: string; dates?: string , genres?: string}>;
+  searchParams: Promise<{ publishers?: string; page?: string; dates?: string , genres?: string, search?: string}>;
 }) {
   const params = await searchParams;
   const publishersFilter = params.publishers ?? undefined;
   const pageParam = params.page;
   const datesParam = params.dates ?? undefined;
   const genresParam = params.genres ?? undefined;
+  const searchParam = params.search ?? undefined;
   const currentPage = Math.max(1, parseInt(String(pageParam ?? "1"), 10) || 1);
 
   const [gamesRes, publishersRes, genresRes] = await Promise.all([
@@ -31,6 +33,7 @@ export default async function GamesPage({
       ...(publishersFilter && { publishers: publishersFilter }),
       ...(datesParam && { dates: datesParam }),
       ...(genresParam && { genres: genresParam }),
+      ...(searchParam && { search: searchParam }),
     }),
     publishersList({ page_size: 50 }),
     genresList({ page_size: 50 }),
@@ -52,6 +55,7 @@ export default async function GamesPage({
           <ReleaseDate />
         </Suspense>
           <GenresFilter genres={genres} />
+          <SearchInput />
       </div>
       {games.length > 0 ? (
         <>
