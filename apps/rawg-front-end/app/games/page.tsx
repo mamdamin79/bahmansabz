@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { gamesList } from "@/lib/api/games/games";
 import { genresList } from "@/lib/api/genres/genres";
+import { platformsList } from "@/lib/api/platforms/platforms";
 import { publishersList } from "@/lib/api/publishers/publishers";
 import {
   Card,
@@ -16,6 +17,7 @@ import { PublisherFilter } from "./_components/PublisherFilter";
 import { ReleaseDate } from "./_components/ReleaseDate";
 import { SearchInput } from "./_components/SearchInput";
 import { MetacriticRange } from "./_components/MetacriticRange";
+import { PlatformFilter } from "./_components/PlatformFilter";
 
 export const dynamic = "force-dynamic";
 
@@ -32,6 +34,7 @@ export default async function GamesPage({
     search?: string;
     ordering?: string;
     metacritic?: string;
+    platforms?: string;
   }>;
 }) {
   const params = await searchParams;
@@ -42,12 +45,13 @@ export default async function GamesPage({
   const searchParam = params.search ?? undefined;
   const orderingParam = params.ordering ?? undefined;
   const metacriticParam = params.metacritic ?? undefined;
+  const platformsParam = params.platforms ?? undefined;
   const currentPage = Math.max(
     1,
     parseInt(String(pageParam ?? "1"), 10) || 1
   );
 
-  const [gamesRes, publishersRes, genresRes] = await Promise.all([
+  const [gamesRes, publishersRes, genresRes, platformsRes] = await Promise.all([
     gamesList({
       page: currentPage,
       page_size: PAGE_SIZE,
@@ -57,14 +61,17 @@ export default async function GamesPage({
       ...(searchParam && { search: searchParam }),
       ...(orderingParam && { ordering: orderingParam }),
       ...(metacriticParam && { metacritic: metacriticParam }),
+      ...(platformsParam && { platforms: platformsParam }),
     }),
     publishersList({ page_size: 50 }),
     genresList({ page_size: 50 }),
+    platformsList({ page_size: 50 }),
   ]);
 
   const games = gamesRes.data?.results ?? [];
   const publishers = publishersRes.data?.results ?? [];
   const genres = genresRes.data?.results ?? [];
+  const platforms = platformsRes.data?.results ?? [];
   const totalCount = gamesRes.data?.count ?? 0;
 
   return (
@@ -92,6 +99,7 @@ export default async function GamesPage({
                   <ReleaseDate />
                 </Suspense>
                 <GenresFilter genres={genres} />
+                <PlatformFilter platforms={platforms} />
                 <MetacriticRange metacriticParam={metacriticParam} />
               </CardContent>
             </Card>
@@ -134,6 +142,7 @@ export default async function GamesPage({
                     {publishersFilter ||
                     datesParam ||
                     genresParam ||
+                    platformsParam ||
                     searchParam ||
                     orderingParam ||
                     metacriticParam
