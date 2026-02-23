@@ -1,7 +1,7 @@
 "use client";
 
-import { SearchInput as SharedSearchInput } from "@/components/search-input";
 import { useSearchParams } from "next/navigation";
+import { SearchInput as SharedSearchInput } from "@/components/search-input";
 
 export function SearchInput() {
   const searchParams = useSearchParams();

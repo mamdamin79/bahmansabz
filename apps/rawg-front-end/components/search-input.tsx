@@ -1,9 +1,9 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState } from "react";
 import { useDebounceCallback } from "usehooks-ts";
+import { Input } from "@/components/ui/input";
 import { Label } from "./ui/label";
 
 export interface SearchInputProps {
@@ -98,8 +98,16 @@ export function SearchInput({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-2" style={{ flex: 1, minWidth: 0 }}>
-      {label && <Label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">{label}</Label>}
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-2"
+      style={{ flex: 1, minWidth: 0 }}
+    >
+      {label && (
+        <Label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          {label}
+        </Label>
+      )}
       <Input
         name={queryParam}
         placeholder={placeholder}

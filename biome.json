@@ -18,7 +18,9 @@
       "!**/.yarn",
       "!**/*.min.js",
       "!**/*.min.css",
-      "!**/public"
+      "!**/public",
+      "!apps/rawg-front-end/components/ui",
+      "!apps/rawg-front-end/lib/api"
     ]
   },
   "formatter": {
@@ -96,6 +98,9 @@
   "css": {
     "formatter": {
       "enabled": true
+    },
+    "parser": {
+      "tailwindDirectives": true
     }
   },
   "overrides": [

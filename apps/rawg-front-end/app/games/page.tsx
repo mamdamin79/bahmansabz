@@ -1,12 +1,12 @@
 import { Suspense } from "react";
 import { gamesList } from "@/lib/api/games/games";
+import { genresList } from "@/lib/api/genres/genres";
 import { publishersList } from "@/lib/api/publishers/publishers";
 import { GameCard } from "./_components/GameCard";
 import { GamesPagination } from "./_components/GamesPagination";
+import { GenresFilter } from "./_components/GenresFilter";
 import { PublisherFilter } from "./_components/PublisherFilter";
 import { ReleaseDate } from "./_components/ReleaseDate";
-import { GenresFilter } from "./_components/GenresFilter";
-import { genresList } from "@/lib/api/genres/genres";
 import { SearchInput } from "./_components/SearchInput";
 
 export const dynamic = "force-dynamic";
@@ -16,7 +16,13 @@ const PAGE_SIZE = 12;
 export default async function GamesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ publishers?: string; page?: string; dates?: string , genres?: string, search?: string}>;
+  searchParams: Promise<{
+    publishers?: string;
+    page?: string;
+    dates?: string;
+    genres?: string;
+    search?: string;
+  }>;
 }) {
   const params = await searchParams;
   const publishersFilter = params.publishers ?? undefined;
@@ -54,8 +60,8 @@ export default async function GamesPage({
         <Suspense fallback={<ReleaseDateFallback />}>
           <ReleaseDate />
         </Suspense>
-          <GenresFilter genres={genres} />
-          <SearchInput />
+        <GenresFilter genres={genres} />
+        <SearchInput />
       </div>
       {games.length > 0 ? (
         <>
@@ -67,7 +73,10 @@ export default async function GamesPage({
             ))}
           </ul>
           <Suspense fallback={null}>
-            <GamesPagination currentPage={currentPage} totalCount={totalCount} />
+            <GamesPagination
+              currentPage={currentPage}
+              totalCount={totalCount}
+            />
           </Suspense>
         </>
       ) : (

@@ -1,8 +1,7 @@
 "use client";
 
-import { useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import type { Publisher } from "@/lib/api/model";
+import { useTransition } from "react";
 import {
   Combobox,
   ComboboxChip,
@@ -16,6 +15,7 @@ import {
   useComboboxAnchor,
 } from "@/components/ui/combobox";
 import { Label } from "@/components/ui/label";
+import type { Publisher } from "@/lib/api/model";
 
 interface PublisherFilterProps {
   publishers: Publisher[];
@@ -38,7 +38,10 @@ export function PublisherFilter({ publishers }: PublisherFilterProps) {
 
   const publishersParam = searchParams.get("publishers") ?? "";
   const selectedSlugs = publishersParam
-    ? publishersParam.split(",").map((s) => s.trim()).filter(Boolean)
+    ? publishersParam
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
     : [];
 
   const selectedPublishers = publishers.filter((p) =>
@@ -48,10 +51,7 @@ export function PublisherFilter({ publishers }: PublisherFilterProps) {
   const handleValueChange = (value: Publisher[] | null) => {
     const next = new URLSearchParams(searchParams);
     if (value && value.length > 0) {
-      next.set(
-        "publishers",
-        value.map((p) => getPublisherSlug(p)).join(",")
-      );
+      next.set("publishers", value.map((p) => getPublisherSlug(p)).join(","));
     } else {
       next.delete("publishers");
     }
@@ -96,10 +96,7 @@ export function PublisherFilter({ publishers }: PublisherFilterProps) {
           <ComboboxEmpty>No publisher found.</ComboboxEmpty>
           <ComboboxList>
             {(publisher) => (
-              <ComboboxItem
-                key={getPublisherSlug(publisher)}
-                value={publisher}
-              >
+              <ComboboxItem key={getPublisherSlug(publisher)} value={publisher}>
                 {publisher.name}
               </ComboboxItem>
             )}

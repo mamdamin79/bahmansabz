@@ -2,7 +2,6 @@
 
 import { useGamesList } from "@/lib/api/games/games";
 
-
 export default function GamesClientPage() {
   const { data, isLoading, error } = useGamesList({
     page: 1,

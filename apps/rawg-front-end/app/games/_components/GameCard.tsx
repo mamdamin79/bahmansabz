@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { Game } from "@/lib/api/model";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import type { Game } from "@/lib/api/model";
 import { cn } from "@/lib/utils";
 
 interface GameCardProps {
@@ -53,9 +53,7 @@ export function GameCard({ game, className }: GameCardProps) {
       )}
       <CardHeader className="gap-1">
         <CardTitle className="line-clamp-2 text-base">{name}</CardTitle>
-        {released && (
-          <CardDescription>Released {released}</CardDescription>
-        )}
+        {released && <CardDescription>Released {released}</CardDescription>}
       </CardHeader>
       <CardContent className="min-h-0 flex-1 pt-0">
         <div className="flex flex-wrap gap-1.5">
@@ -78,15 +76,19 @@ export function GameCard({ game, className }: GameCardProps) {
       </CardContent>
       <CardFooter className=" pt-4 mt-auto">
         <div className="flex flex-wrap gap-1.5">
-          {platformNames?.length
-            ? platformNames.slice(0, 4).map((platformName) => (
-                <Badge key={platformName} variant="outline" className="font-normal text-xs">
-                  {platformName}
-                </Badge>
-              ))
-            : (
-              <span className="text-muted-foreground text-xs">—</span>
-            )}
+          {platformNames?.length ? (
+            platformNames.slice(0, 4).map((platformName) => (
+              <Badge
+                key={platformName}
+                variant="outline"
+                className="font-normal text-xs"
+              >
+                {platformName}
+              </Badge>
+            ))
+          ) : (
+            <span className="text-muted-foreground text-xs">—</span>
+          )}
         </div>
       </CardFooter>
     </Card>

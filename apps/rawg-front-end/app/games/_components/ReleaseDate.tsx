@@ -1,18 +1,18 @@
 "use client";
 
-import * as React from "react";
+import { format, parse } from "date-fns";
+import { CalendarIcon, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Calendar } from "@/components/ui/calendar";
+import * as React from "react";
+import type { DateRange } from "react-day-picker";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Label } from "@/components/ui/label";
-import { format, parse } from "date-fns";
-import { CalendarIcon, X } from "lucide-react";
-import { type DateRange } from "react-day-picker";
 
 const DATE_FORMAT = "yyyy-MM-dd";
 const DISPLAY_FORMAT = "MMM dd, yyyy";
@@ -24,8 +24,8 @@ function parseDateParam(value: string | null): DateRange | undefined {
   try {
     const from = parse(fromStr, DATE_FORMAT, new Date());
     const to = toStr ? parse(toStr, DATE_FORMAT, new Date()) : undefined;
-    if (isNaN(from.getTime())) return undefined;
-    if (to && isNaN(to.getTime())) return { from };
+    if (Number.isNaN(from.getTime())) return undefined;
+    if (to && Number.isNaN(to.getTime())) return { from };
     if (to && from > to) return undefined;
     return { from, to };
   } catch {
@@ -52,7 +52,7 @@ export function ReleaseDate() {
   const [isPending, startTransition] = React.useTransition();
   const [open, setOpen] = React.useState(false);
   const [draftRange, setDraftRange] = React.useState<DateRange | undefined>(
-    undefined,
+    undefined
   );
 
   const dateRange = parseDateParam(searchParams.get(PARAM_KEY));

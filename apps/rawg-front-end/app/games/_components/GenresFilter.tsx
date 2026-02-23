@@ -1,8 +1,7 @@
 "use client";
 
-import { useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import type { Genre } from "@/lib/api/model";
+import { useTransition } from "react";
 import {
   Combobox,
   ComboboxChip,
@@ -16,6 +15,7 @@ import {
   useComboboxAnchor,
 } from "@/components/ui/combobox";
 import { Label } from "@/components/ui/label";
+import type { Genre } from "@/lib/api/model";
 
 interface GenresFilterProps {
   genres: Genre[];
@@ -37,7 +37,10 @@ export function GenresFilter({ genres }: GenresFilterProps) {
 
   const genresParam = searchParams.get("genres") ?? "";
   const selectedSlugs = genresParam
-    ? genresParam.split(",").map((s) => s.trim()).filter(Boolean)
+    ? genresParam
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
     : [];
 
   const selectedGenres = genres.filter((g) =>
@@ -47,10 +50,7 @@ export function GenresFilter({ genres }: GenresFilterProps) {
   const handleValueChange = (value: Genre[] | null) => {
     const next = new URLSearchParams(searchParams);
     if (value && value.length > 0) {
-      next.set(
-        "genres",
-        value.map((g) => getGenreSlug(g)).join(",")
-      );
+      next.set("genres", value.map((g) => getGenreSlug(g)).join(","));
     } else {
       next.delete("genres");
     }
@@ -82,9 +82,7 @@ export function GenresFilter({ genres }: GenresFilterProps) {
             <ComboboxValue placeholder="All genres">
               {(selected: Genre[]) =>
                 selected.map((g) => (
-                  <ComboboxChip key={getGenreSlug(g)}>
-                    {g.name}
-                  </ComboboxChip>
+                  <ComboboxChip key={getGenreSlug(g)}>{g.name}</ComboboxChip>
                 ))
               }
             </ComboboxValue>
@@ -95,10 +93,7 @@ export function GenresFilter({ genres }: GenresFilterProps) {
           <ComboboxEmpty>No genre found.</ComboboxEmpty>
           <ComboboxList>
             {(genre) => (
-              <ComboboxItem
-                key={getGenreSlug(genre)}
-                value={genre}
-              >
+              <ComboboxItem key={getGenreSlug(genre)} value={genre}>
                 {genre.name}
               </ComboboxItem>
             )}

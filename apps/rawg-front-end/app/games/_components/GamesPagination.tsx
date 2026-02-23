@@ -1,15 +1,15 @@
 "use client";
 
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Pagination,
   PaginationContent,
   PaginationEllipsis,
   PaginationItem,
 } from "@/components/ui/pagination";
-import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const PAGE_SIZE = 12;
@@ -26,7 +26,10 @@ function buildPageHref(searchParams: URLSearchParams, page: number): string {
 }
 
 /** Show page numbers: first, maybe ellipsis, window around current, maybe ellipsis, last */
-function getPageNumbers(currentPage: number, totalPages: number): (number | "ellipsis")[] {
+function getPageNumbers(
+  currentPage: number,
+  totalPages: number
+): (number | "ellipsis")[] {
   if (totalPages <= 7) {
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
@@ -43,15 +46,22 @@ function getPageNumbers(currentPage: number, totalPages: number): (number | "ell
   return pages;
 }
 
-export function GamesPagination({ currentPage, totalCount }: GamesPaginationProps) {
+export function GamesPagination({
+  currentPage,
+  totalCount,
+}: GamesPaginationProps) {
   const searchParams = useSearchParams();
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
   const pageNumbers = getPageNumbers(currentPage, totalPages);
 
   if (totalPages <= 1) return null;
 
-  const prevHref = currentPage > 1 ? buildPageHref(searchParams, currentPage - 1) : undefined;
-  const nextHref = currentPage < totalPages ? buildPageHref(searchParams, currentPage + 1) : undefined;
+  const prevHref =
+    currentPage > 1 ? buildPageHref(searchParams, currentPage - 1) : undefined;
+  const nextHref =
+    currentPage < totalPages
+      ? buildPageHref(searchParams, currentPage + 1)
+      : undefined;
 
   return (
     <Pagination className="mt-8">
