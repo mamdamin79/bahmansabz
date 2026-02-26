@@ -27,7 +27,5 @@ interface PublisherFilterProps {
 }
 
 export function PublisherFilter({ publishers }: PublisherFilterProps) {
-  return (
-    <FilterCombobox items={publishers} config={publisherFilterConfig} />
-  );
+  return <FilterCombobox items={publishers} config={publisherFilterConfig} />;
 }

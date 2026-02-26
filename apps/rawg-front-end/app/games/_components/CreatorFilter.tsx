@@ -27,7 +27,5 @@ interface CreatorFilterProps {
 }
 
 export function CreatorFilter({ creators }: CreatorFilterProps) {
-  return (
-    <FilterCombobox items={creators} config={creatorFilterConfig} />
-  );
+  return <FilterCombobox items={creators} config={creatorFilterConfig} />;
 }

@@ -23,7 +23,5 @@ interface PlatformFilterProps {
 }
 
 export function PlatformFilter({ platforms }: PlatformFilterProps) {
-  return (
-    <FilterCombobox items={platforms} config={platformFilterConfig} />
-  );
+  return <FilterCombobox items={platforms} config={platformFilterConfig} />;
 }

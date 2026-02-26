@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
-export default function GamesError({
+export default function RootError({
   error,
   reset,
 }: {
@@ -15,7 +15,7 @@ export default function GamesError({
     <main className="min-h-screen bg-muted/30">
       <div className="sticky top-0 z-10 border-b border-border/50 bg-background/80 backdrop-blur-sm">
         <div className="mx-auto flex max-w-6xl px-4 py-4">
-          <h1 className="text-2xl font-bold tracking-tight">Games</h1>
+        <h1 className="text-2xl font-bold tracking-tight">error</h1>
         </div>
       </div>
       <div className="mx-auto max-w-6xl px-4 py-8">

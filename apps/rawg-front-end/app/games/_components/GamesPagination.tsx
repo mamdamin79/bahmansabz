@@ -40,14 +40,14 @@ function getPageNumbers(
   }
   const pages: (number | "ellipsis")[] = [];
   pages.push(1);
-  if (currentPage > PAGINATION_ELLIPSIS_MARGIN + 1)
-    pages.push("ellipsis");
+  if (currentPage > PAGINATION_ELLIPSIS_MARGIN + 1) pages.push("ellipsis");
   const start = Math.max(2, currentPage - 1);
   const end = Math.min(totalPages - 1, currentPage + 1);
   for (let p = start; p <= end; p++) {
     if (p !== 1 && p !== totalPages) pages.push(p);
   }
-  if (currentPage < totalPages - PAGINATION_ELLIPSIS_MARGIN) pages.push("ellipsis");
+  if (currentPage < totalPages - PAGINATION_ELLIPSIS_MARGIN)
+    pages.push("ellipsis");
   if (totalPages > 1) pages.push(totalPages);
   return pages;
 }

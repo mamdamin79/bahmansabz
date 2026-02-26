@@ -25,14 +25,10 @@ export function GameCard({ game, className }: GameCardProps) {
     ?.map((p) => p.platform?.name)
     .filter(Boolean) as string[] | undefined;
 
-  const href =
-    game.id != null ? `/games/${game.id}` : null;
+  const href = game.id != null ? `/games/${game.id}` : null;
 
   return (
-    <Link
-      href={href ?? "/games"}
-      className="block h-full"
-    >
+    <Link href={href ?? "/games"} className="block h-full">
       <Card
         className={cn(
           "flex h-full flex-col overflow-hidden rounded-2xl border-border/50 shadow-lg transition-shadow hover:shadow-xl",
@@ -82,14 +78,14 @@ export function GameCard({ game, className }: GameCardProps) {
               platformNames
                 .slice(0, GAME_CARD_MAX_PLATFORMS)
                 .map((platformName) => (
-                <Badge
-                  key={platformName}
-                  variant="outline"
-                  className="text-xs font-normal"
-                >
-                  {platformName}
-                </Badge>
-              ))
+                  <Badge
+                    key={platformName}
+                    variant="outline"
+                    className="text-xs font-normal"
+                  >
+                    {platformName}
+                  </Badge>
+                ))
             ) : (
               <span className="text-muted-foreground text-xs">—</span>
             )}

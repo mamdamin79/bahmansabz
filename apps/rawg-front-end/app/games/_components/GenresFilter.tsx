@@ -27,7 +27,5 @@ interface GenresFilterProps {
 }
 
 export function GenresFilter({ genres }: GenresFilterProps) {
-  return (
-    <FilterCombobox items={genres} config={genreFilterConfig} />
-  );
+  return <FilterCombobox items={genres} config={genreFilterConfig} />;
 }

@@ -4,10 +4,6 @@ import { gamesList } from "@/lib/api/games/games";
 import { genresList } from "@/lib/api/genres/genres";
 import { platformsList } from "@/lib/api/platforms/platforms";
 import { publishersList } from "@/lib/api/publishers/publishers";
-import {
-  FILTER_LIST_PAGE_SIZE,
-  GAMES_PAGE_SIZE,
-} from "./constants";
 import { CreatorFilter } from "./_components/CreatorFilter";
 import { GameCard } from "./_components/GameCard";
 import { GamesPagination } from "./_components/GamesPagination";
@@ -18,6 +14,7 @@ import { PlatformFilter } from "./_components/PlatformFilter";
 import { PublisherFilter } from "./_components/PublisherFilter";
 import { ReleaseDate } from "./_components/ReleaseDate";
 import { SearchInput } from "./_components/SearchInput";
+import { FILTER_LIST_PAGE_SIZE, GAMES_PAGE_SIZE } from "./constants";
 
 export const dynamic = "force-dynamic";
 
@@ -103,9 +100,9 @@ export default async function GamesPage({
                 <CardTitle className="text-base">Filters</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                  <PublisherFilter publishers={publishers} />
-                  <CreatorFilter creators={creators} />
-                  <ReleaseDate />
+                <PublisherFilter publishers={publishers} />
+                <CreatorFilter creators={creators} />
+                <ReleaseDate />
                 <GenresFilter genres={genres} />
                 <PlatformFilter platforms={platforms} />
                 <MetacriticRange metacriticParam={metacriticParam} />
