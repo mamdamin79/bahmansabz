@@ -84,13 +84,6 @@ export default async function GamesPage({
 
   return (
     <main className="min-h-screen bg-muted/30">
-      {/* Page header - same style as detail back bar */}
-      <div className="sticky top-0 z-10 border-b border-border/50 bg-background/80 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-6xl px-4 py-4">
-          <h1 className="text-2xl font-bold tracking-tight">Games</h1>
-        </div>
-      </div>
-
       <div className="mx-auto max-w-6xl px-4 py-8">
         <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
           {/* Aside: filters */}

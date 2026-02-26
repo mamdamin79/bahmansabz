@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import { gamesRead } from "@/lib/api/games/games";
 import type { GameSingle } from "@/lib/api/model";
 import { GameDetailAbout } from "./_components/GameDetailAbout";
-import { GameDetailBackLink } from "./_components/GameDetailBackLink";
 import { GameDetailHero } from "./_components/GameDetailHero";
 import { GameDetailSidebar } from "./_components/GameDetailSidebar";
 import { GameDetailStats } from "./_components/GameDetailStats";
@@ -46,8 +45,6 @@ export default async function GameDetailPage({ params }: GamePageProps) {
 
   return (
     <main className="min-h-screen bg-muted/30">
-      <GameDetailBackLink />
-
       <div className="mx-auto max-w-5xl px-4 py-8">
         <GameDetailHero
           name={name}

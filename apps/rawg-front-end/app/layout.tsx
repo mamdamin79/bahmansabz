@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { GamesRouteHeader } from "./games/_components/GamesRouteHeader";
 import "./globals.css";
 import { TanstackQueryProvider } from "./providers";
 
@@ -15,7 +16,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen bg-gray-50 text-gray-900 antialiased">
-        <TanstackQueryProvider>{children}</TanstackQueryProvider>
+        <TanstackQueryProvider>
+          <GamesRouteHeader />
+          {children}
+        </TanstackQueryProvider>
       </body>
     </html>
   );
