@@ -48,25 +48,35 @@ export default async function GamesPage({
   const platformsParam = params.platforms ?? undefined;
   const currentPage = Math.max(1, parseInt(String(pageParam ?? "1"), 10) || 1);
 
-  const [gamesRes, publishersRes, creatorsRes, genresRes, platformsRes] =
-    await Promise.all([
-      gamesList({
-        page: currentPage,
-        page_size: GAMES_PAGE_SIZE,
-        ...(publishersFilter && { publishers: publishersFilter }),
-        ...(creatorsFilter && { creators: creatorsFilter }),
-        ...(datesParam && { dates: datesParam }),
-        ...(genresParam && { genres: genresParam }),
-        ...(searchParam && { search: searchParam }),
-        ...(orderingParam && { ordering: orderingParam }),
-        ...(metacriticParam && { metacritic: metacriticParam }),
-        ...(platformsParam && { platforms: platformsParam }),
-      }),
-      publishersList({ page_size: FILTER_LIST_PAGE_SIZE }),
-      creatorsList({ page_size: FILTER_LIST_PAGE_SIZE }),
-      genresList({ page_size: FILTER_LIST_PAGE_SIZE }),
-      platformsList({ page_size: FILTER_LIST_PAGE_SIZE }),
-    ]);
+  let gamesRes: Awaited<ReturnType<typeof gamesList>>;
+  let publishersRes: Awaited<ReturnType<typeof publishersList>>;
+  let creatorsRes: Awaited<ReturnType<typeof creatorsList>>;
+  let genresRes: Awaited<ReturnType<typeof genresList>>;
+  let platformsRes: Awaited<ReturnType<typeof platformsList>>;
+
+  try {
+    [gamesRes, publishersRes, creatorsRes, genresRes, platformsRes] =
+      await Promise.all([
+        gamesList({
+          page: currentPage,
+          page_size: GAMES_PAGE_SIZE,
+          ...(publishersFilter && { publishers: publishersFilter }),
+          ...(creatorsFilter && { creators: creatorsFilter }),
+          ...(datesParam && { dates: datesParam }),
+          ...(genresParam && { genres: genresParam }),
+          ...(searchParam && { search: searchParam }),
+          ...(orderingParam && { ordering: orderingParam }),
+          ...(metacriticParam && { metacritic: metacriticParam }),
+          ...(platformsParam && { platforms: platformsParam }),
+        }),
+        publishersList({ page_size: FILTER_LIST_PAGE_SIZE }),
+        creatorsList({ page_size: FILTER_LIST_PAGE_SIZE }),
+        genresList({ page_size: FILTER_LIST_PAGE_SIZE }),
+        platformsList({ page_size: FILTER_LIST_PAGE_SIZE }),
+      ]);
+  } catch {
+    throw new Error("Failed to load games");
+  }
 
   const games = gamesRes.data?.results ?? [];
   const publishers = publishersRes.data?.results ?? [];
