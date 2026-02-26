@@ -61,10 +61,10 @@ export default async function GamesPage({
         ...(metacriticParam && { metacritic: metacriticParam }),
         ...(platformsParam && { platforms: platformsParam }),
       }),
-      publishersList({ page_size: 50 }),
-      creatorsList({ page_size: 50 }),
-      genresList({ page_size: 50 }),
-      platformsList({ page_size: 50 }),
+      publishersList({ page_size: 100 }),
+      creatorsList({ page_size: 100 }),
+      genresList({ page_size: 100 }),
+      platformsList({ page_size: 100 }),
     ]);
 
   const games = gamesRes.data?.results ?? [];
