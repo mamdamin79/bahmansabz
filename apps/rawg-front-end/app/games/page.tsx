@@ -18,69 +18,101 @@ import { FILTER_LIST_PAGE_SIZE, GAMES_PAGE_SIZE } from "./constants";
 
 export const dynamic = "force-dynamic";
 
+type SearchParams = {
+  publishers?: string;
+  creators?: string;
+  page?: string;
+  dates?: string;
+  genres?: string;
+  search?: string;
+  ordering?: string;
+  metacritic?: string;
+  platforms?: string;
+};
+
+function parsePageParams(params: SearchParams) {
+  const pageParam = params.page;
+  const currentPage = Math.max(1, parseInt(String(pageParam ?? "1"), 10) || 1);
+  return {
+    currentPage,
+    publishersFilter: params.publishers ?? undefined,
+    creatorsFilter: params.creators ?? undefined,
+    datesParam: params.dates ?? undefined,
+    genresParam: params.genres ?? undefined,
+    searchParam: params.search ?? undefined,
+    orderingParam: params.ordering ?? undefined,
+    metacriticParam: params.metacritic ?? undefined,
+    platformsParam: params.platforms ?? undefined,
+  };
+}
+
+function buildGamesListParams(
+  p: ReturnType<typeof parsePageParams>
+): Parameters<typeof gamesList>[0] {
+  return {
+    page: p.currentPage,
+    page_size: GAMES_PAGE_SIZE,
+    ...(p.publishersFilter && { publishers: p.publishersFilter }),
+    ...(p.creatorsFilter && { creators: p.creatorsFilter }),
+    ...(p.datesParam && { dates: p.datesParam }),
+    ...(p.genresParam && { genres: p.genresParam }),
+    ...(p.searchParam && { search: p.searchParam }),
+    ...(p.orderingParam && { ordering: p.orderingParam }),
+    ...(p.metacriticParam && { metacritic: p.metacriticParam }),
+    ...(p.platformsParam && { platforms: p.platformsParam }),
+  };
+}
+
+function hasActiveFilters(p: ReturnType<typeof parsePageParams>): boolean {
+  return !!(
+    p.publishersFilter ||
+    p.creatorsFilter ||
+    p.datesParam ||
+    p.genresParam ||
+    p.platformsParam ||
+    p.searchParam ||
+    p.orderingParam ||
+    p.metacriticParam
+  );
+}
+
+async function fetchGamesPageData(p: ReturnType<typeof parsePageParams>) {
+  const [gamesRes, publishersRes, creatorsRes, genresRes, platformsRes] =
+    await Promise.all([
+      gamesList(buildGamesListParams(p)),
+      publishersList({ page_size: FILTER_LIST_PAGE_SIZE }),
+      creatorsList({ page_size: FILTER_LIST_PAGE_SIZE }),
+      genresList({ page_size: FILTER_LIST_PAGE_SIZE }),
+      platformsList({ page_size: FILTER_LIST_PAGE_SIZE }),
+    ]);
+  return {
+    games: gamesRes.data?.results ?? [],
+    publishers: publishersRes.data?.results ?? [],
+    creators: creatorsRes.data?.results ?? [],
+    genres: genresRes.data?.results ?? [],
+    platforms: platformsRes.data?.results ?? [],
+    totalCount: gamesRes.data?.count ?? 0,
+  };
+}
+
 export default async function GamesPage({
   searchParams,
 }: {
-  searchParams: Promise<{
-    publishers?: string;
-    creators?: string;
-    page?: string;
-    dates?: string;
-    genres?: string;
-    search?: string;
-    ordering?: string;
-    metacritic?: string;
-    platforms?: string;
-  }>;
+  searchParams: Promise<SearchParams>;
 }) {
   const params = await searchParams;
-  const publishersFilter = params.publishers ?? undefined;
-  const creatorsFilter = params.creators ?? undefined;
-  const pageParam = params.page;
-  const datesParam = params.dates ?? undefined;
-  const genresParam = params.genres ?? undefined;
-  const searchParam = params.search ?? undefined;
-  const orderingParam = params.ordering ?? undefined;
-  const metacriticParam = params.metacritic ?? undefined;
-  const platformsParam = params.platforms ?? undefined;
-  const currentPage = Math.max(1, parseInt(String(pageParam ?? "1"), 10) || 1);
+  const p = parsePageParams(params);
 
-  let gamesRes: Awaited<ReturnType<typeof gamesList>>;
-  let publishersRes: Awaited<ReturnType<typeof publishersList>>;
-  let creatorsRes: Awaited<ReturnType<typeof creatorsList>>;
-  let genresRes: Awaited<ReturnType<typeof genresList>>;
-  let platformsRes: Awaited<ReturnType<typeof platformsList>>;
-
+  let data: Awaited<ReturnType<typeof fetchGamesPageData>>;
   try {
-    [gamesRes, publishersRes, creatorsRes, genresRes, platformsRes] =
-      await Promise.all([
-        gamesList({
-          page: currentPage,
-          page_size: GAMES_PAGE_SIZE,
-          ...(publishersFilter && { publishers: publishersFilter }),
-          ...(creatorsFilter && { creators: creatorsFilter }),
-          ...(datesParam && { dates: datesParam }),
-          ...(genresParam && { genres: genresParam }),
-          ...(searchParam && { search: searchParam }),
-          ...(orderingParam && { ordering: orderingParam }),
-          ...(metacriticParam && { metacritic: metacriticParam }),
-          ...(platformsParam && { platforms: platformsParam }),
-        }),
-        publishersList({ page_size: FILTER_LIST_PAGE_SIZE }),
-        creatorsList({ page_size: FILTER_LIST_PAGE_SIZE }),
-        genresList({ page_size: FILTER_LIST_PAGE_SIZE }),
-        platformsList({ page_size: FILTER_LIST_PAGE_SIZE }),
-      ]);
+    data = await fetchGamesPageData(p);
   } catch {
     throw new Error("Failed to load games");
   }
 
-  const games = gamesRes.data?.results ?? [];
-  const publishers = publishersRes.data?.results ?? [];
-  const creators = creatorsRes.data?.results ?? [];
-  const genres = genresRes.data?.results ?? [];
-  const platforms = platformsRes.data?.results ?? [];
-  const totalCount = gamesRes.data?.count ?? 0;
+  const emptyMessage = hasActiveFilters(p)
+    ? "No games found for the selected filters."
+    : "No games found.";
 
   return (
     <main className="min-h-screen bg-muted/30">
@@ -93,12 +125,12 @@ export default async function GamesPage({
                 <CardTitle className="text-base">Filters</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <PublisherFilter publishers={publishers} />
-                <CreatorFilter creators={creators} />
+                <PublisherFilter publishers={data.publishers} />
+                <CreatorFilter creators={data.creators} />
                 <ReleaseDate />
-                <GenresFilter genres={genres} />
-                <PlatformFilter platforms={platforms} />
-                <MetacriticRange metacriticParam={metacriticParam} />
+                <GenresFilter genres={data.genres} />
+                <PlatformFilter platforms={data.platforms} />
+                <MetacriticRange metacriticParam={p.metacriticParam} />
               </CardContent>
             </Card>
           </aside>
@@ -114,10 +146,10 @@ export default async function GamesPage({
               </div>
             </div>
 
-            {games.length > 0 ? (
+            {data.games.length > 0 ? (
               <>
                 <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                  {games.map((game) => (
+                  {data.games.map((game) => (
                     <li
                       key={game.id ?? game.slug ?? game.name}
                       className="h-full"
@@ -127,24 +159,15 @@ export default async function GamesPage({
                   ))}
                 </ul>
                 <GamesPagination
-                  currentPage={currentPage}
-                  totalCount={totalCount}
+                  currentPage={p.currentPage}
+                  totalCount={data.totalCount}
                 />
               </>
             ) : (
               <Card className="rounded-2xl border-dashed border-border/50">
                 <CardContent className="flex flex-col items-center justify-center py-12 text-center">
                   <p className="text-muted-foreground text-sm">
-                    {publishersFilter ||
-                    creatorsFilter ||
-                    datesParam ||
-                    genresParam ||
-                    platformsParam ||
-                    searchParam ||
-                    orderingParam ||
-                    metacriticParam
-                      ? "No games found for the selected filters."
-                      : "No games found."}
+                    {emptyMessage}
                   </p>
                 </CardContent>
               </Card>

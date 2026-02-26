@@ -4,11 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-export default function RootError({
-  reset,
-}: {
-  reset: () => void;
-}) {
+export default function RootError({ reset }: { reset: () => void }) {
   return (
     <main className="min-h-screen bg-muted/30">
       <div className="sticky top-0 z-10 border-b border-border/50 bg-background/80 backdrop-blur-sm">
