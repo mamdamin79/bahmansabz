@@ -13,6 +13,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { RELEASE_DATE_MIN } from "../constants";
 
 const DATE_FORMAT = "yyyy-MM-dd";
 const DISPLAY_FORMAT = "MMM dd, yyyy";
@@ -136,7 +137,7 @@ export function ReleaseDate() {
               numberOfMonths={2}
               captionLayout="dropdown"
               disabled={(date) =>
-                date > new Date() || date < new Date("1900-01-01")
+                date > new Date() || date < new Date(RELEASE_DATE_MIN)
               }
             />
             <div className="flex items-center justify-between border-t p-2">

@@ -1,10 +1,13 @@
-import { Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { creatorsList } from "@/lib/api/creators/creators";
 import { gamesList } from "@/lib/api/games/games";
 import { genresList } from "@/lib/api/genres/genres";
 import { platformsList } from "@/lib/api/platforms/platforms";
 import { publishersList } from "@/lib/api/publishers/publishers";
+import {
+  FILTER_LIST_PAGE_SIZE,
+  GAMES_PAGE_SIZE,
+} from "./constants";
 import { CreatorFilter } from "./_components/CreatorFilter";
 import { GameCard } from "./_components/GameCard";
 import { GamesPagination } from "./_components/GamesPagination";
@@ -17,8 +20,6 @@ import { ReleaseDate } from "./_components/ReleaseDate";
 import { SearchInput } from "./_components/SearchInput";
 
 export const dynamic = "force-dynamic";
-
-const PAGE_SIZE = 12;
 
 export default async function GamesPage({
   searchParams,
@@ -51,7 +52,7 @@ export default async function GamesPage({
     await Promise.all([
       gamesList({
         page: currentPage,
-        page_size: PAGE_SIZE,
+        page_size: GAMES_PAGE_SIZE,
         ...(publishersFilter && { publishers: publishersFilter }),
         ...(creatorsFilter && { creators: creatorsFilter }),
         ...(datesParam && { dates: datesParam }),
@@ -61,10 +62,10 @@ export default async function GamesPage({
         ...(metacriticParam && { metacritic: metacriticParam }),
         ...(platformsParam && { platforms: platformsParam }),
       }),
-      publishersList({ page_size: 100 }),
-      creatorsList({ page_size: 100 }),
-      genresList({ page_size: 100 }),
-      platformsList({ page_size: 100 }),
+      publishersList({ page_size: FILTER_LIST_PAGE_SIZE }),
+      creatorsList({ page_size: FILTER_LIST_PAGE_SIZE }),
+      genresList({ page_size: FILTER_LIST_PAGE_SIZE }),
+      platformsList({ page_size: FILTER_LIST_PAGE_SIZE }),
     ]);
 
   const games = gamesRes.data?.results ?? [];
@@ -92,15 +93,9 @@ export default async function GamesPage({
                 <CardTitle className="text-base">Filters</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Suspense fallback={<PublisherFilterFallback />}>
                   <PublisherFilter publishers={publishers} />
-                </Suspense>
-                <Suspense fallback={<CreatorFilterFallback />}>
                   <CreatorFilter creators={creators} />
-                </Suspense>
-                <Suspense fallback={<ReleaseDateFallback />}>
                   <ReleaseDate />
-                </Suspense>
                 <GenresFilter genres={genres} />
                 <PlatformFilter platforms={platforms} />
                 <MetacriticRange metacriticParam={metacriticParam} />
@@ -131,12 +126,10 @@ export default async function GamesPage({
                     </li>
                   ))}
                 </ul>
-                <Suspense fallback={null}>
-                  <GamesPagination
-                    currentPage={currentPage}
-                    totalCount={totalCount}
-                  />
-                </Suspense>
+                <GamesPagination
+                  currentPage={currentPage}
+                  totalCount={totalCount}
+                />
               </>
             ) : (
               <Card className="rounded-2xl border-dashed border-border/50">
@@ -160,38 +153,5 @@ export default async function GamesPage({
         </div>
       </div>
     </main>
-  );
-}
-
-function PublisherFilterFallback() {
-  return (
-    <div className="flex flex-col gap-2">
-      <span className="text-sm font-medium text-muted-foreground">
-        Filter by publisher
-      </span>
-      <div className="h-9 max-w-md animate-pulse rounded-md border border-border/50 bg-muted/50" />
-    </div>
-  );
-}
-
-function ReleaseDateFallback() {
-  return (
-    <div className="flex flex-col gap-2">
-      <span className="text-sm font-medium text-muted-foreground">
-        Filter by release date
-      </span>
-      <div className="h-9 max-w-md animate-pulse rounded-md border border-border/50 bg-muted/50" />
-    </div>
-  );
-}
-
-function CreatorFilterFallback() {
-  return (
-    <div className="flex flex-col gap-2">
-      <span className="text-sm font-medium text-muted-foreground">
-        Filter by creator
-      </span>
-      <div className="h-9 max-w-md animate-pulse rounded-md border border-border/50 bg-muted/50" />
-    </div>
   );
 }

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import type { Game } from "@/lib/api/model";
 import { cn } from "@/lib/utils";
+import { GAME_CARD_MAX_PLATFORMS } from "../constants";
 
 interface GameCardProps {
   game: Game;
@@ -24,8 +25,14 @@ export function GameCard({ game, className }: GameCardProps) {
     ?.map((p) => p.platform?.name)
     .filter(Boolean) as string[] | undefined;
 
+  const href =
+    game.id != null ? `/games/${game.id}` : null;
+
   return (
-    <Link href={`/games/${game.id}`} className="block h-full">
+    <Link
+      href={href ?? "/games"}
+      className="block h-full"
+    >
       <Card
         className={cn(
           "flex h-full flex-col overflow-hidden rounded-2xl border-border/50 shadow-lg transition-shadow hover:shadow-xl",
@@ -72,7 +79,9 @@ export function GameCard({ game, className }: GameCardProps) {
         <CardFooter className="mt-auto pt-4">
           <div className="flex flex-wrap gap-1.5">
             {platformNames?.length ? (
-              platformNames.slice(0, 4).map((platformName) => (
+              platformNames
+                .slice(0, GAME_CARD_MAX_PLATFORMS)
+                .map((platformName) => (
                 <Badge
                   key={platformName}
                   variant="outline"

@@ -74,7 +74,7 @@ export function GamesSort() {
         </SelectTrigger>
         <SelectContent>
           {ORDERING_OPTIONS.map((opt) => (
-            <SelectItem key={opt.label} value={opt.value}>
+            <SelectItem key={opt.value} value={opt.value}>
               {opt.label}
             </SelectItem>
           ))}

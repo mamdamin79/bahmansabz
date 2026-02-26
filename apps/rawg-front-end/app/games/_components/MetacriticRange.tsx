@@ -4,15 +4,20 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
+import { METACRITIC_MAX, METACRITIC_MIN } from "../constants";
 
 const PARAM_KEY = "metacritic";
-const DEFAULT_RANGE: [number, number] = [1, 100];
+const DEFAULT_RANGE: [number, number] = [METACRITIC_MIN, METACRITIC_MAX];
 
 function parseMetacriticParam(param: string | undefined): [number, number] {
   if (!param?.trim()) return DEFAULT_RANGE;
   const parts = param.split(",").map((s) => parseInt(s.trim(), 10));
-  const a = Number.isNaN(parts[0]) ? 1 : Math.max(1, Math.min(100, parts[0]));
-  const b = Number.isNaN(parts[1]) ? 100 : Math.max(1, Math.min(100, parts[1]));
+  const a = Number.isNaN(parts[0])
+    ? METACRITIC_MIN
+    : Math.max(METACRITIC_MIN, Math.min(METACRITIC_MAX, parts[0]));
+  const b = Number.isNaN(parts[1])
+    ? METACRITIC_MAX
+    : Math.max(METACRITIC_MIN, Math.min(METACRITIC_MAX, parts[1]));
   return [Math.min(a, b), Math.max(a, b)];
 }
 
@@ -59,8 +64,8 @@ export function MetacriticRange({
       </div>
       <Slider
         id="metacritic-slider"
-        max={100}
-        min={1}
+        max={METACRITIC_MAX}
+        min={METACRITIC_MIN}
         value={value}
         onValueChange={(v) => setValue(v as [number, number])}
         onValueCommit={handleValueCommit}

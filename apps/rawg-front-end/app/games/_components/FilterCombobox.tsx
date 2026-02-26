@@ -15,10 +15,13 @@ import {
   useComboboxAnchor,
 } from "@/components/ui/combobox";
 import { Label } from "@/components/ui/label";
+import { GAMES_PATH } from "../constants";
 
 export interface FilterComboboxConfig<T> {
   /** URL search param key (e.g. "publishers", "creators", "genres", "platforms") */
   paramKey: string;
+  /** Base path for navigation (e.g. "/games"). Defaults to GAMES_PATH when not provided. */
+  basePath?: string;
   /** Label above the combobox (e.g. "Filter by publisher") */
   label: string;
   /** Placeholder when none selected (e.g. "All publishers") */
@@ -43,6 +46,7 @@ export interface FilterComboboxProps<T> {
 export function FilterCombobox<T>({ items, config }: FilterComboboxProps<T>) {
   const {
     paramKey,
+    basePath = GAMES_PATH,
     label,
     placeholderAll,
     placeholderSearch,
@@ -78,7 +82,7 @@ export function FilterCombobox<T>({ items, config }: FilterComboboxProps<T>) {
     }
     next.delete("page");
     startTransition(() => {
-      router.push(`/games?${next.toString()}`);
+      router.push(`${basePath}?${next.toString()}`);
     });
   };
 
