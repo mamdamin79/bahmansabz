@@ -1,9 +1,11 @@
 import { Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { creatorsList } from "@/lib/api/creators/creators";
 import { gamesList } from "@/lib/api/games/games";
 import { genresList } from "@/lib/api/genres/genres";
 import { platformsList } from "@/lib/api/platforms/platforms";
 import { publishersList } from "@/lib/api/publishers/publishers";
+import { CreatorFilter } from "./_components/CreatorFilter";
 import { GameCard } from "./_components/GameCard";
 import { GamesPagination } from "./_components/GamesPagination";
 import { GamesSort } from "./_components/GamesSort";
@@ -23,6 +25,7 @@ export default async function GamesPage({
 }: {
   searchParams: Promise<{
     publishers?: string;
+    creators?: string;
     page?: string;
     dates?: string;
     genres?: string;
@@ -34,6 +37,7 @@ export default async function GamesPage({
 }) {
   const params = await searchParams;
   const publishersFilter = params.publishers ?? undefined;
+  const creatorsFilter = params.creators ?? undefined;
   const pageParam = params.page;
   const datesParam = params.dates ?? undefined;
   const genresParam = params.genres ?? undefined;
@@ -43,25 +47,29 @@ export default async function GamesPage({
   const platformsParam = params.platforms ?? undefined;
   const currentPage = Math.max(1, parseInt(String(pageParam ?? "1"), 10) || 1);
 
-  const [gamesRes, publishersRes, genresRes, platformsRes] = await Promise.all([
-    gamesList({
-      page: currentPage,
-      page_size: PAGE_SIZE,
-      ...(publishersFilter && { publishers: publishersFilter }),
-      ...(datesParam && { dates: datesParam }),
-      ...(genresParam && { genres: genresParam }),
-      ...(searchParam && { search: searchParam }),
-      ...(orderingParam && { ordering: orderingParam }),
-      ...(metacriticParam && { metacritic: metacriticParam }),
-      ...(platformsParam && { platforms: platformsParam }),
-    }),
-    publishersList({ page_size: 50 }),
-    genresList({ page_size: 50 }),
-    platformsList({ page_size: 50 }),
-  ]);
+  const [gamesRes, publishersRes, creatorsRes, genresRes, platformsRes] =
+    await Promise.all([
+      gamesList({
+        page: currentPage,
+        page_size: PAGE_SIZE,
+        ...(publishersFilter && { publishers: publishersFilter }),
+        ...(creatorsFilter && { creators: creatorsFilter }),
+        ...(datesParam && { dates: datesParam }),
+        ...(genresParam && { genres: genresParam }),
+        ...(searchParam && { search: searchParam }),
+        ...(orderingParam && { ordering: orderingParam }),
+        ...(metacriticParam && { metacritic: metacriticParam }),
+        ...(platformsParam && { platforms: platformsParam }),
+      }),
+      publishersList({ page_size: 50 }),
+      creatorsList({ page_size: 50 }),
+      genresList({ page_size: 50 }),
+      platformsList({ page_size: 50 }),
+    ]);
 
   const games = gamesRes.data?.results ?? [];
   const publishers = publishersRes.data?.results ?? [];
+  const creators = creatorsRes.data?.results ?? [];
   const genres = genresRes.data?.results ?? [];
   const platforms = platformsRes.data?.results ?? [];
   const totalCount = gamesRes.data?.count ?? 0;
@@ -86,6 +94,9 @@ export default async function GamesPage({
               <CardContent className="space-y-4">
                 <Suspense fallback={<PublisherFilterFallback />}>
                   <PublisherFilter publishers={publishers} />
+                </Suspense>
+                <Suspense fallback={<CreatorFilterFallback />}>
+                  <CreatorFilter creators={creators} />
                 </Suspense>
                 <Suspense fallback={<ReleaseDateFallback />}>
                   <ReleaseDate />
@@ -132,6 +143,7 @@ export default async function GamesPage({
                 <CardContent className="flex flex-col items-center justify-center py-12 text-center">
                   <p className="text-muted-foreground text-sm">
                     {publishersFilter ||
+                    creatorsFilter ||
                     datesParam ||
                     genresParam ||
                     platformsParam ||
@@ -167,6 +179,17 @@ function ReleaseDateFallback() {
     <div className="flex flex-col gap-2">
       <span className="text-sm font-medium text-muted-foreground">
         Filter by release date
+      </span>
+      <div className="h-9 max-w-md animate-pulse rounded-md border border-border/50 bg-muted/50" />
+    </div>
+  );
+}
+
+function CreatorFilterFallback() {
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-sm font-medium text-muted-foreground">
+        Filter by creator
       </span>
       <div className="h-9 max-w-md animate-pulse rounded-md border border-border/50 bg-muted/50" />
     </div>
