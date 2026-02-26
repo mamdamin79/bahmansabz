@@ -1,6 +1,5 @@
 "use client";
 import {
-  Button,
   Combobox,
   ComboboxButton,
   ComboboxInput,
@@ -8,8 +7,8 @@ import {
   ComboboxOptions,
 } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon, XIcon } from "lucide-react";
+import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
 
 const people = [
   { id: 1, name: "Tom Cook", position: "Designer" },
@@ -24,46 +23,45 @@ const people = [
   { id: 10, name: "Michelle Thompson", position: "HR" },
 ] as const;
 
+type Person = (typeof people)[number];
+
 export const HeadlessUiCombobox = () => {
   const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState<
-    { id: number; name: string; position: string }[]
-  >([people[1]]);
+  const [selected, setSelected] = useState<Person[]>([people[1]]);
 
-  const filteredPeople =
-    query === ""
-      ? people
-      : people.filter((person) => {
-          return person.name.toLowerCase().includes(query.toLowerCase());
-        });
-
-  const groupedPeople = Object.values(
-    people.reduce(
+  // 1. Group the people once (or only when people list changes)
+  const groupedPeople = useMemo(() => {
+    return people.reduce(
       (acc, person) => {
-        if (!acc[person.position]) {
-          acc[person.position] = {
-            label: person.position,
-            items: [],
-          };
+        const group = acc.find((g) => g.label === person.position);
+        if (group) {
+          group.items.push(person);
+        } else {
+          acc.push({ label: person.position, items: [person] });
         }
-        acc[person.position].items.push(person);
         return acc;
       },
-      {} as Record<string, { label: string; items: typeof people }>,
-    ),
-  );
+      [] as { label: string; items: Person[] }[]
+    );
+  }, []);
 
-  const filteredGroups = groupedPeople
-    .map((group) => ({
-      ...group,
-      items: group.items.filter((p) =>
-        p.name.toLowerCase().includes(query.toLowerCase()),
-      ),
-    }))
-    .filter((group) => group.items.length > 0);
+  // 2. Filter the groups based on query
+  const filteredGroups = useMemo(() => {
+    const normalizedQuery = query.toLowerCase().trim();
+    if (normalizedQuery === "") return groupedPeople;
+
+    return groupedPeople
+      .map((group) => ({
+        ...group,
+        items: group.items.filter((person) =>
+          person.name.toLowerCase().includes(normalizedQuery)
+        ),
+      }))
+      .filter((group) => group.items.length > 0);
+  }, [query, groupedPeople]);
 
   const remove = (id: number) => {
-    setSelected(selected.filter((person) => person.id !== id));
+    setSelected((prev) => prev.filter((person) => person.id !== id));
   };
 
   const clear = () => {
@@ -83,8 +81,8 @@ export const HeadlessUiCombobox = () => {
           {/* INPUT CONTAINER */}
           <div
             className={cn(
-              "flex flex-wrap relative items-center gap-1 rounded-lg bg-slate-800/5 px-2 py-1.5 pr-8",
-              "focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-slate-800/25",
+              "flex flex-wrap relative items-center gap-1 rounded-lg bg-slate-800/5 px-2 py-1.5 pr-20", // Increased padding for icons
+              "focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-slate-800/25"
             )}
           >
             {/* CHIPS */}
@@ -95,79 +93,75 @@ export const HeadlessUiCombobox = () => {
               >
                 {person.name}
                 <XIcon
-                  className="size-3.5 cursor-pointer"
-                  onClick={() => remove(person.id)}
+                  className="size-3.5 cursor-pointer hover:text-red-500"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent opening the list when clicking remove
+                    remove(person.id);
+                  }}
                 />
               </div>
             ))}
 
             {/* INPUT */}
             <ComboboxInput
-              as="input"
               className="flex-1 min-w-[80px] border-none bg-transparent p-0 text-sm focus:outline-none"
               onChange={(e) => setQuery(e.target.value)}
-              value={query}
+              displayValue={() => query}
             />
           </div>
 
-          {/* BUTTON */}
-
-          <div className="absolute flex items-center inset-y-0 right-0 px-2.5">
-            <span className="text-sm text-slate-800/20">{selected.length}</span>
-            <ComboboxButton>
+          {/* ACTION BUTTONS */}
+          <div className="absolute flex items-center inset-y-0 right-0 px-2.5 gap-1">
+            <span className="text-xs font-medium text-slate-400">
+              {selected.length}
+            </span>
+            <ComboboxButton className="p-1 cursor-pointer">
               <ChevronDownIcon className="size-4 text-slate-800" />
             </ComboboxButton>
-            <Button onMouseDown={clear}>
-              <XIcon className="size-4 cursor-pointer text-slate-800" />
-            </Button>
+            <button
+              type="button"
+              onMouseDown={(e) => {
+                e.preventDefault(); // Keep focus on input
+                clear();
+              }}
+              className="p-1"
+            >
+              <XIcon className="size-4 text-slate-800 cursor-pointer" />
+            </button>
           </div>
         </div>
 
         {/* OPTIONS */}
-        {/* <ComboboxOptions
-          anchor="bottom"
-          className={cn(
-            "absolute left-0 right-0 w-[28rem] max-w-full mt-2 rounded-xl border border-slate-800/5 bg-white p-1",
-            "max-h-60 overflow-auto",
-          )}
-        >
-          {filteredPeople.map((person) => (
-            <ComboboxOption
-              key={person.id}
-              value={person}
-              className="group flex cursor-pointer items-center gap-2 rounded-lg px-3 py-1.5 data-focus:bg-slate-100"
-            >
-              <CheckIcon className="invisible size-4 group-data-selected:visible" />
-              <div className="text-sm">{person.name}</div>
-            </ComboboxOption>
-          ))}
-        </ComboboxOptions> */}
-
         <ComboboxOptions
-          anchor="bottom"
           className={cn(
-            "absolute left-0 right-0 w-[28rem] max-w-full mt-2 rounded-xl border border-slate-800/5 bg-white p-1",
-            "max-h-60 overflow-auto",
+            "mt-2 rounded-xl border border-slate-800/5 bg-white p-1 pt-0 shadow-lg",
+            "max-h-96 overflow-auto [--anchor-gap:8px] z-50"
           )}
         >
+          {filteredGroups.length === 0 && query !== "" && (
+            <div className="px-4 py-2 text-sm text-slate-500">
+              No results found.
+            </div>
+          )}
+
           {filteredGroups.map((group) => (
-            <div key={group.label} className="mb-2">
-              {/* GROUP HEADER */}
-              <div className="sticky top-0 z-10 px-3 py-1 text-xs font-medium text-slate-500 bg-white">
+            <div key={group.label}>
+              <div className="sticky top-0 z-10 px-3 py-1.5 text-[10px] uppercase tracking-wider font-bold text-slate-400 bg-white/90 backdrop-blur-sm">
                 {group.label}
               </div>
 
-              {/* ITEMS */}
               {group.items.map((person) => (
                 <ComboboxOption
                   key={person.id}
                   value={person}
-                  className="group flex cursor-pointer items-center gap-2 rounded-lg px-3 py-1.5 data-focus:bg-slate-100"
+                  className="group flex cursor-pointer items-center gap-2 rounded-lg px-3 py-1.5 data-[focus]:bg-slate-100"
                 >
-                  <CheckIcon className="invisible size-4 group-data-selected:visible" />
+                  <CheckIcon className="invisible size-4 group-data-[selected]:visible text-slate-800" />
                   <div className="flex flex-col">
-                    <span className="text-sm">{person.name}</span>
-                    <span className="text-xs text-slate-400">
+                    <span className="text-sm font-medium text-slate-900">
+                      {person.name}
+                    </span>
+                    <span className="text-xs text-slate-500">
                       {person.position}
                     </span>
                   </div>
