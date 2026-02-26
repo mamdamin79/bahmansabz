@@ -9,21 +9,21 @@ import { cn } from "@/lib/utils";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/games", label: "Games" },
-  { href: "/listbox", label: "ListBox" },
+  { href: "/combobox", label: "Combobox" },
 ] as const;
 
 export function Header() {
   const pathname = usePathname();
   const isGamesSection =
     pathname === "/games" || pathname.startsWith("/games/");
-  const isListBoxSection =
-    pathname === "/listbox" || pathname.startsWith("/listbox/");
+  const isComboboxSection =
+    pathname === "/combobox" || pathname.startsWith("/combobox/");
   const isGameDetail = pathname.startsWith("/games/");
 
   function isActive(href: string) {
     if (href === "/") return pathname === "/";
     if (href === "/games") return isGamesSection;
-    if (href === "/listbox") return isListBoxSection;
+    if (href === "/combobox") return isComboboxSection;
     return pathname === href;
   }
 
