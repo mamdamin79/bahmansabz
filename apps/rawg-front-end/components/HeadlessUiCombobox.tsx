@@ -29,20 +29,15 @@ export const HeadlessUiCombobox = () => {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Person[]>([people[1]]);
 
-  // 1. Group the people once (or only when people list changes)
+  // 1. Group the people once (O(n) with Map)
   const groupedPeople = useMemo(() => {
-    return people.reduce(
-      (acc, person) => {
-        const group = acc.find((g) => g.label === person.position);
-        if (group) {
-          group.items.push(person);
-        } else {
-          acc.push({ label: person.position, items: [person] });
-        }
-        return acc;
-      },
-      [] as { label: string; items: Person[] }[]
-    );
+    const map = new Map<string, Person[]>();
+    for (const person of people) {
+      const list = map.get(person.position) ?? [];
+      list.push(person);
+      map.set(person.position, list);
+    }
+    return Array.from(map.entries()).map(([label, items]) => ({ label, items }));
   }, []);
 
   // 2. Filter the groups based on query
@@ -70,7 +65,7 @@ export const HeadlessUiCombobox = () => {
   };
 
   return (
-    <div className="mx-auto relative h-screen max-w-md pt-20">
+    <div className="relative max-w-md">
       <Combobox
         multiple
         value={selected}
@@ -81,7 +76,7 @@ export const HeadlessUiCombobox = () => {
           {/* INPUT CONTAINER */}
           <div
             className={cn(
-              "flex flex-wrap relative items-center gap-1 rounded-lg bg-slate-800/5 px-2 py-1.5 pr-20", // Increased padding for icons
+              "flex flex-wrap relative items-center gap-1 rounded-lg bg-slate-800/5 px-2 py-1.5 pr-20",
               "focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-slate-800/25"
             )}
           >
@@ -92,13 +87,17 @@ export const HeadlessUiCombobox = () => {
                 className="flex items-center gap-1 rounded-md bg-slate-800/10 px-2 py-0.5 text-sm"
               >
                 {person.name}
-                <XIcon
-                  className="size-3.5 cursor-pointer hover:text-red-500"
+                <button
+                  type="button"
+                  aria-label={`Remove ${person.name}`}
+                  className="p-0.5 rounded cursor-pointer hover:text-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-800/25 focus-visible:ring-inset"
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevent opening the list when clicking remove
+                    e.stopPropagation();
                     remove(person.id);
                   }}
-                />
+                >
+                  <XIcon className="size-3.5" aria-hidden />
+                </button>
               </div>
             ))}
 
@@ -107,24 +106,31 @@ export const HeadlessUiCombobox = () => {
               className="flex-1 min-w-[80px] border-none bg-transparent p-0 text-sm focus:outline-none"
               onChange={(e) => setQuery(e.target.value)}
               displayValue={() => query}
+              placeholder={selected.length === 0 ? "Search…" : undefined}
+              aria-label="Search and select people"
             />
           </div>
 
           {/* ACTION BUTTONS */}
           <div className="absolute flex items-center inset-y-0 right-0 px-2.5 gap-1">
-            <span className="text-xs font-medium text-slate-400">
+            <span className="text-xs font-medium text-slate-400" aria-hidden>
               {selected.length}
             </span>
-            <ComboboxButton className="p-1 cursor-pointer">
+            <ComboboxButton
+              className="p-1 cursor-pointer rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-800/25 focus-visible:ring-offset-1"
+              aria-label="Open options"
+            >
               <ChevronDownIcon className="size-4 text-slate-800" />
             </ComboboxButton>
             <button
               type="button"
               onMouseDown={(e) => {
-                e.preventDefault(); // Keep focus on input
+                e.preventDefault();
                 clear();
               }}
-              className="p-1"
+              className="p-1 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-800/25 focus-visible:ring-offset-1 disabled:opacity-50 disabled:pointer-events-none"
+              aria-label="Clear selection"
+              disabled={selected.length === 0}
             >
               <XIcon className="size-4 text-slate-800 cursor-pointer" />
             </button>
@@ -139,7 +145,11 @@ export const HeadlessUiCombobox = () => {
           )}
         >
           {filteredGroups.length === 0 && query !== "" && (
-            <div className="px-4 py-2 text-sm text-slate-500">
+            <div
+              className="px-4 py-2 text-sm text-slate-500"
+              role="status"
+              aria-live="polite"
+            >
               No results found.
             </div>
           )}
@@ -154,9 +164,9 @@ export const HeadlessUiCombobox = () => {
                 <ComboboxOption
                   key={person.id}
                   value={person}
-                  className="group flex cursor-pointer items-center gap-2 rounded-lg px-3 py-1.5 data-[focus]:bg-slate-100"
+                  className="group flex cursor-pointer items-center gap-2 rounded-lg px-3 py-1.5 data-focus:bg-slate-100"
                 >
-                  <CheckIcon className="invisible size-4 group-data-[selected]:visible text-slate-800" />
+                  <CheckIcon className="invisible size-4 group-data-selected:visible text-slate-800" />
                   <div className="flex flex-col">
                     <span className="text-sm font-medium text-slate-900">
                       {person.name}
