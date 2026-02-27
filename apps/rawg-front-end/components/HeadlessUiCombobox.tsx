@@ -37,7 +37,10 @@ export const HeadlessUiCombobox = () => {
       list.push(person);
       map.set(person.position, list);
     }
-    return Array.from(map.entries()).map(([label, items]) => ({ label, items }));
+    return Array.from(map.entries()).map(([label, items]) => ({
+      label,
+      items,
+    }));
   }, []);
 
   // 2. Filter the groups based on query
@@ -145,13 +148,12 @@ export const HeadlessUiCombobox = () => {
           )}
         >
           {filteredGroups.length === 0 && query !== "" && (
-            <div
-              className="px-4 py-2 text-sm text-slate-500"
-              role="status"
+            <output
+              className="px-4 py-2 text-sm text-slate-500 block"
               aria-live="polite"
             >
               No results found.
-            </div>
+            </output>
           )}
 
           {filteredGroups.map((group) => (
