@@ -1,0 +1,16 @@
+node_modules
+.next
+.turbo
+dist
+*.tsbuildinfo
+
+.git
+.gitignore
+*.log
+
+.env
+.env.*
+!.env.example
+
+.DS_Store
+Thumbs.db
