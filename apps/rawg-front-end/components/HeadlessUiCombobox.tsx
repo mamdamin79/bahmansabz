@@ -67,6 +67,30 @@ export const HeadlessUiCombobox = () => {
     setQuery("");
   };
 
+  const allFilteredPeople = useMemo(
+    () => filteredGroups.flatMap((group) => group.items),
+    [filteredGroups]
+  );
+
+  const selectAllFiltered = () => {
+    setSelected((prev) => {
+      const byId = new Map(prev.map((p) => [p.id, p]));
+      for (const person of allFilteredPeople) byId.set(person.id, person);
+      return Array.from(byId.values());
+    });
+  };
+
+  const allFilteredSelected =
+    allFilteredPeople.length > 0 &&
+    allFilteredPeople.every((p) =>
+      selected.some((s) => s.id === p.id)
+    );
+
+  const deselectAllFiltered = () => {
+    const filteredIds = new Set(allFilteredPeople.map((p) => p.id));
+    setSelected((prev) => prev.filter((p) => !filteredIds.has(p.id)));
+  };
+
   return (
     <div className="relative max-w-md">
       <Combobox
@@ -154,6 +178,34 @@ export const HeadlessUiCombobox = () => {
             >
               No results found.
             </output>
+          )}
+
+          {filteredGroups.length > 0 && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                allFilteredSelected ? deselectAllFiltered() : selectAllFiltered();
+              }}
+              className="flex w-full items-center gap-2 rounded-tl-lg px-3 py-2 text-left text-sm font-medium text-slate-700 bg-slate-50 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-800/25 focus-visible:ring-inset"
+              aria-pressed={allFilteredSelected}
+              aria-label={
+                allFilteredSelected
+                  ? "Deselect all filtered results"
+                  : "Select all filtered results"
+              }
+            >
+              <CheckIcon
+                className={cn(
+                  "size-4 shrink-0",
+                  allFilteredSelected ? "visible text-slate-800" : "invisible"
+                )}
+                aria-hidden
+              />
+              {allFilteredSelected
+                ? "Deselect all (filtered)"
+                : "Select all (filtered)"}
+            </button>
           )}
 
           {filteredGroups.map((group) => (
