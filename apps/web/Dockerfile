@@ -12,6 +12,7 @@ WORKDIR /app
 
 COPY --from=deps /app/ ./
 COPY . .
+RUN mkdir -p public
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
